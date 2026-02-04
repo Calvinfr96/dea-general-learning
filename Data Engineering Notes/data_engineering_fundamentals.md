@@ -6,6 +6,13 @@
   - It's especially important for data pipelines to be scalable, since they need to be able handle processing increasing amounts of data quickly, especially with the rapid rise of AI.
 - Data can either be structured, semi-structured, or unstructured. Structured data comes in the form of CSV or tabular formats. Semi-structured data comes in the form of XML and JSON. Unstructured data comes in the form of video, images, text, etc.
 - Data engineers will start by building a data pipeline to collect data from various sources. Next, they will clean up the data and convert it to a form where it is ready for analysis. The data warehouse is typically the final destination of the data once it has gone through these steps.
+- Data engineers work very closely with data scientists to help build the foundation necessary for the data scientist to do their job. This includes:
+  - building datasets
+  - cleaning up data
+  - monitoring data quality
+  - building real-time processes
+  - scaling to ensure the product can handle large amounts of data.
+  - SQL and Python
 
 ## Stages of Data Engineering
 - The first part of the data engineering flow is gathering business requirements from business personnel or data scientists. Here, engineers ask what kind of data is required and how they plan on using the data. The data engineering project is then planned out based on these requirements.
@@ -68,16 +75,20 @@
 ### Data Modeling Facts
 - The two main types of tables that data engineers work with are dimension tables and fact tables. Dimension tables typically store characteristics and details, while fact tables typically store measurements of entities stored in the dimension tables.
   - Fact tables are a lot more dynamic than dimension tables.
-- Measurements can include measurements such as daily sales, daily activity, etc. Measurements can either be aggregated or non-aggregated; this is called granularity.
+- Measurements can include measurements such as daily sales, daily activity, etc. Measurements can either be aggregated or non-aggregated; the level to which data is aggregated (daily, weekly, monthly, etc.) is called granularity.
 
 ### Data Modeling - SCD
 -  Dimension (dim) tables are commonly used to store entities along with their characteristics and details.
   - For example, consider DoorDash. The primary entities for this company include riders, drivers, and restaurants.
 - The main reason dimensions and facts are stored in separate tables is to save space. By separating them, you don't have to store an entity's details alongside each fact related to that entity.
-- There are three types of dim tables:
+- There are three types of Slowly Changing Dimension (SCD) dim tables:
   - Type 1 is the most common allows updating a row to update characteristics and get the most up to date information.
   - Type 2 inserts a new row to update characteristics, instead of updating an existing row. This type of table is ideal when historical data is crucial to business operations.
   - Type 3 inserts a new column to update characteristics, instead of inserting a new row. This type of table should be avoided as it can result in a lot null data, which can complicate data handling logic.
+- There are also three types of fact tables:
+  - Transaction: Records user transactions, such as purchases on an e-commerce website.
+  - Periodic Snapshot: Contains data aggregated over a certain time period, such as daily, weekly, or monthly.
+  - Accumulating Snapshot: Contains rows that are updated with new columns that represent a period of time. For example, for a row that is meant to represent a week worth of data, each column could represent a day's worth of aggregated data.
 
 ### Data Modeling - OLTP vs. OLAP
 - The two main types of fact tables/databases used in data engineering are Online Transactional Processing (OLTP) and Online Analytical Processing (OLAP) databases. In an OLTP table, one row represents one transaction.
@@ -231,7 +242,7 @@
 
 ## Data Mart
 - A data mart is a database that holds a limited amount of structured data for a single purpose in a single line of business. For example, a data mart can be a database of organized data, used by a sales and marketing team, that does not exceed 100GB.
-- Data from a data mart typically comes from a data warehouse, which is why they are widely considered a subset of data warehousing. Data marts help to split the data stored into in a data warehouse into multiple controlled segments, which helps better control access and increase security.
+- Data from a data mart typically comes from a data warehouse, which is why they are widely considered a subset of data warehousing. Data marts help to split the data stored in a data warehouse into multiple controlled segments, which can each have their own schema. This helps better control access and increase security.
 
 ## Data Lake
 - A data lake is a data storage strategy whereby a centralized repository holds all of an organization's structured and unstructured data. It employs a flat architecture that allows you to store raw data at scale without the need to perform data modeling.
