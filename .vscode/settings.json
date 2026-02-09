@@ -5,6 +5,8 @@
     "OLTP",
     "Powercenter",
     "RDBMS",
-    "Teradata"
+    "Robinhood",
+    "Teradata",
+    "varchar"
   ]
 }
