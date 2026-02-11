@@ -534,7 +534,7 @@ Ref:trade.user_id > user.user_id
 
 
 ## Subscription Status (GrubHub)
-Create a Data Model to track user’s subscription status and also tracking the dollar saved per user
+Create a Data Model to track user’s subscription status and also tracking the dollar saved per user.
 
 ### Clarifying Questions
 - What do you mean by 'dollar saved per user'?
@@ -622,4 +622,240 @@ Table fact_transactions as trans{
 
 Ref: trans.user_id > user.user_id
 Ref: trans.sub_status_id > subs.sub_status_id
+```
+
+
+## Friend Recommendation Engine (Instagram)
+Create a Data Model to allow scientists come up with a friend recommendation engine.
+
+### Clarifying Questions
+- What kind of parameters will be used to recommend friends?
+
+### Goals and Metrics
+- Goals:
+  - Increase user engagement rate.
+
+- Metrics:
+  - Number of posts
+  - Number of connections
+  - Session time
+
+### Data Model
+- Entities Involved:
+  - Users
+- Dimension Tables:
+  - dim_users:
+    - user_id
+    - username
+    - first_name
+    - last_name
+    - age
+    - email_address
+    - city
+    - state
+    - country
+- Fact Tables:
+  - fact_user_session
+    - session_id
+    - user_id
+    - session_date
+    - session_start_time
+    - session_end_time
+  - fact_user_connection
+    - connection_id
+    - user_id
+    - connection_user_id
+    - is_active
+  - fact_user_posts
+    - post_id
+    - user_id
+    - content
+  - fact_user_likes
+    - user_id
+    - post_id
+    - comment_id
+    - is_liked
+  - fact_user_comments
+    - comment_id
+    - user_id
+    - content
+  
+### Solution
+```
+Table dim_users as user{
+  user_id int
+  user_first_name varchar
+  user_last_name varchar
+  gender varchar
+  contact_detail int
+  facebook_account varchar
+  date_of_birth date
+  Indexes {
+    (user_id) [pk]
+  }
+}
+
+
+Table fact_friends_list as friend{
+  list_id int
+  follow_date date
+  user_id int
+  friend_id int
+  Indexes {
+    (list_id) [pk]
+  }
+}
+
+
+Table fact_posts as post{
+  post_id int
+  posting_date date
+  posting_type varchar
+  post_comments varchar
+  post_tags varchar
+  hashtags_used varchar
+  Indexes {
+    (post_id) [pk]
+  }
+}
+
+
+Table fact_searches as search{
+  search_id int
+  search_name varchar
+  profile_id_viewed int
+  profile_view_duration int
+  chat_id int
+  Indexes {
+    (search_id) [pk]
+  }
+}
+
+
+
+Table fact_chats as chat{
+  chat_id int
+  chat_date date
+  receiver_user_id int
+  chat_start_time timestamp
+  chat_end_time timestamp
+  Indexes {
+    (chat_id) [pk]
+  }
+}
+
+
+
+Table fact_user_sessions as session{
+  session_id int
+  session_date date
+  session_start_timestamp timestamp
+  session_end_timestamp timestamp
+  user_id int
+  post_id int
+  search_id int
+  chat_id int
+  Indexes {
+    (session_id) [pk]
+  }
+}
+
+
+
+Ref: session.user_id > user.user_id
+Ref: friend.user_id > user.user_id
+Ref: friend.friend_id > user.user_id
+Ref: chat.receiver_user_id > user.user_id
+Ref: session.post_id > post.post_id
+Ref: session.search_id > search.search_id
+Ref: session.chat_id > chat.chat_id
+Ref: search.chat_id > chat.chat_id
+```
+
+## Power User (Whatsapp)
+Create a Data Model that can be used to define metrics for detecting a WhatsApp Power user. What product recommendation could be created from this information?
+
+### Clarifying Questions
+- What is the definition of a Power User?
+
+### Goals and Metrics
+- Goals:
+  - Increase successful product recommendations
+- Metrics:
+  - Recommendation count
+
+### Data Model
+- Entities Involved:
+  - Users
+  - Products
+- Dimension Tables:
+  - dim_users
+    - user_id
+    - facebook_account_id
+    - first_name
+    - last_name
+    - age
+    - email_address
+    - city
+    - state
+    - country
+- Fact Tables:
+  - fact_user_chats
+    - chat_id
+    - user_id
+    - member_id_list
+  - fact_user_messages
+    - message_id
+    - chat_id
+    - user_id
+    - date
+    - content
+
+### Solution
+```
+Table dim_users as user{
+  user_id int
+  user_first_name varchar
+  user_last_name varchar
+  contact_detail int
+  recovery_email varchar
+  account_type varchar
+  location varchar
+  language varchar
+  Indexes {
+    (user_id) [pk]
+  }
+}
+
+
+Table dim_features as feature{
+  feature_id int
+  feature_name varchar
+  feature_type varchar
+  Indexes {
+    (feature_id) [pk]
+  }
+}
+
+
+
+Table fact_user_sessions as session{
+  activity_id int
+  session_id int
+  user_id int
+  feature_id int
+  session_date date
+  session_start_time timestamp
+  session_end_time timestamp
+  device_type varchar
+  os_version varchar
+  browser_type varchar
+  Indexes {
+    (activity_id) [pk]
+  }
+}
+
+
+Ref: session.user_id > user.user_id
+Ref: session.feature_id > feature.feature_id
 ```
