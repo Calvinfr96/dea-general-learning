@@ -309,3 +309,459 @@
 
   number = randint(0,100) # assigns a random integer between 0 and 100 (exclusive).
   ```
+
+## List Comprehension
+- List comprehension in python provides a convenient (less readable) way to quickly create lists without using loops. For example, the following method can be used to turn a string into a list:
+  ```
+  test = "Hello World"
+  lst = []
+
+  for i in test
+    lst.append(i) # adds each character (including spaces) to lst.
+  ```
+  - The same thing can be done using  list comprehension, as follows:
+  ```
+  string = "Hello World"
+  lst = [item for item in string] # it's important that the for loop be within the square brackets to properly create the list.
+
+  # instead of using the list() and range() functions to create a list, the same range function can be used with list comprehension as follows:
+
+  lst = [i for i in range(0,10)] # creates a list of numbers 0 through 9.
+
+  # you can also use if statements with list comprehension as follows:
+
+  lst = [i for i in range(0,10) if i%2 == 0] # creates a list of even numbers from 0 to 9 (0, 2, 4, 6, 8).
+
+  # you can also manipulate the variable outside of the for loop to modify the elements in the list:
+
+  lst = [i**2 for i in range(0,10) if i%2 == 0] # creates a list of squares of even numbers from 0 to 9 (0, 4, 16, 36, 64).
+
+  # if-else statements can also be used with list comprehension as follows (not recommended):
+
+  lst = [i if i%2==0 else 'ODD' for i in range(0,10)] # creates a list of even numbers and the string 'ODD' replacing odd numbers.
+
+  # using nested loops to create lists:
+
+  lst = []
+
+  for i in [1, 2, 3]:
+    for j in [1, 10, 100]
+      lst.append(i*j) # creates the following list: [1, 10, 100, 2, 20, 200, 3, 30, 300]
+  
+  # using nested loops with list comprehension:
+
+  lst = [i*j for i in [1, 2, 3] for j in [1, 10 , 100]] # creates the following list: [1, 10, 100, 2, 20, 200, 3, 30, 300] 
+  ```
+
+## Functions
+- Functions in python allow you to create clean, repeatable code that can be reused any number of times in your program.
+- Functions are defined using the `def` keyword. The standard naming convention for functions in python is `snake_case`. For example:
+  ```
+  def greet_hello():
+    """
+    we are greeting hello. # acts as function documentation
+    """
+
+    print("hello")
+    return
+
+  greet_hello() # executes the above function. As with loops, indentation is very important.
+  ```
+- Functions can also be given parameters to dynamically modify their execution:
+  ```
+  def greet_hello(name):
+    """
+    we are greeting hello.
+    """
+
+    print("Hello " + name)
+    return
+
+  greet_hello("John") # executes the above function, printing 'Hello John'.
+  greet_hello("Mike") # executes the above function, printing 'Hello Mike'.
+  greet_hello("Sarah") # executes the above function, printing 'Hello Sarah'.
+  ```
+- The `return` keyword in a function can be used to pass a value to something else in your program, such as a variable. For example:
+  ```
+  def sum_of_two_numbers(x, y):
+    """
+    Adds and returns x and y
+    """
+
+    return (x + y) # use parentheses to enclose return statement for enhanced readability.
+  
+  sum_of_two_numbers(3, 4) # returns 7.
+  final_result = sum_of_two_numbers(3, 4) # returns 7 and stores it in final_result.
+  ```
+- The `return` keyword is not required if a function is not meant to return a value. For example:
+  ```
+  def print_output(name):
+    print("Hello {}".format(name))
+
+  print_output("John") # prints 'Hello John' to the console.
+  ```
+- Function parameters can be given default values, making them optional. For example:
+  ```
+  def print_output(name = "Mike"):
+    print("Hello {}".format(name))
+
+  print_output("John") # prints 'Hello John' to the console.
+  print_output() # prints 'Hello Mike' to the console.
+  ```
+- Using logic within functions:
+  ```
+  def is_even(number):
+    return (number % 2 == 0)
+  
+  is_even(40) # returns True
+  is_even(43) # returns False
+
+  # alternatively, we could use two separate return statements:
+
+  def is_even(number):
+    if number % 2 == 0:
+      return True
+    else:
+      return False
+  
+  is_even(48) # returns True
+  is_even(57) # returns False  
+  ```
+  ```
+  def check_for_evens(lst)
+    for i in lst:
+      if i % 2 == 0:
+        return True
+    return False # notice the indentation here. This return statement is outside of the for loop to prevent the function from returning False when it encounters the first odd number in a list.
+  
+  check_for_evens([1, 2, 3, 4]) # returns True
+  check_for_evens([1, 3, 5, 7]) # returns False
+  ```
+- If the return statement within a function is never executed, the function will simply return nothing. For example:
+  ```
+  def check_for_evens(lst)
+    for i in lst:
+      if i % 2 == 0:
+        return True
+      else:
+        pass
+  check_for_evens([1, 2, 3, 4]) # returns True
+  check_for_evens([1, 3, 5, 7]) # returns nothing
+  ```
+- Unpacking tuples within functions:
+  ```
+  # individual elements within tuples can typically be accessed using loops as follows:
+
+  stocks = [("AAPL", 300), ("GOOG", 400), ("MSFT". 500)]
+
+  for stock, value in stocks:
+    print(stock) # prints 'AAPL', 'GOOG', and 'MSFT'.
+    print(value) # prints 300, 400, and 500.
+  
+  # individual elements within tuples can also be accessed with functions as follows:
+
+  work_hours = [("Billy", 300), ("Sam", 400), ("Henry", 600)]
+
+  def employee_of_month(work_hours):
+    current_max_hours = 0
+    current_employee_of_month = ""
+
+    for name, hours in work_hours:
+      if hours > current_max_hours:
+        current_max_hours = hours
+        current_employee_of_month = name
+    
+    return (current_employee_of_month, current_max_hours)
+
+  employee_of_month(work_hours) # returns ("Henry", 600).
+  employee,hours = employee_of_month(work_hours) # assigns "Henry" to employee and 600 to hours.
+  ```
+
+### Interactions Between Functions
+- In real python scripts, you will most likely have multiple functions interacting with one another to produce a final result. As an example, let's simulate the Three Cup Monte game, where you need to guess which cup an object is under after the cups have been shuffled:
+  - Shuffle example:
+  ```
+  from random import shuffle
+
+  my_list = [2, 6, 5, 1, 8, 9]
+
+  def shuffle_list(lst):
+    shuffle(lst) # shuffle modifies the list in-place and returns None, it does not return a shuffled list.
+  
+  shuffle_list(my_list)
+  print(my_list) # prints a shuffled list, such as [1, 6, 5, 2, 8, 9].
+  ```
+  - Implementation:
+  ```
+  from random import shuffle
+
+  my_list = ['   ', ' o ', '   ']
+
+  def shuffle_list(lst):
+    shuffle(lst)
+
+  def check_guess():
+    guess = ''
+
+    guess = input('Pick a number from index 0, 1, or 2: ')
+    while guess not in ['0', '1', '2']:
+      guess = input('Pick a number from index 0, 1, or 2: ')
+    
+    return int(guess)
+  
+  def validate_guess(current_list, current_guess):
+
+    if current_list[current_guess] == ' o ':
+      return('Correct guess')
+    else:
+      return('Wrong guess')
+  
+  ## Input List
+  my_list = ['   ', ' o ', '   ']
+
+  ## Shuffle
+  shuffle_list(my_list)
+
+  ## Take Guess From User
+  user_guess = check_guess()
+
+  ## Check Guess
+  validate_guess(my_list, user_guess)
+  ```
+
+### Lambda, Map, and Filter
+- The `map()` function will apply a given input function to an iterable and returns an anonymous value that can be used in a loop or to construct a list. For example:
+  ```
+  my_list = [1, 2, 3, 4, 5]
+
+  def square_num(value):
+    return (value ** 2) # parentheses not required, but improves readability.
+  
+  new_list = list(map(square_num, my_list)) # produces a list of [1, 4, 9, 16, 25] and assigns it to new_list. You cannot assign 'map(square_num, my_list)' directly to new_list.
+
+  for i in map(square_num, my_list):
+    print(i) # prints the squares of each number in the list.
+  ```
+- The `filter()` function will apply a given input value which **returns a boolean value** to a given input list and filter items based on those which return true when passed to the input function. For example:
+  ```
+  names = ['Gloria', 'Allen', 'Bob', 'Steve']
+  def check_string(string):
+    if len(string)%2==0:
+      return True
+    else:
+      return False
+  
+  even_strings = list(filter(check_string, names)) # returns ['Gloria'] since that was the only name with an even number of characters.
+  ```
+- The `lambda` keyword is used to create an anonymous function. For example:
+  ```
+  def square_number(number):
+    return number ** 2
+  
+  # the lambda equivalent of this would be:
+
+  square = lambda: num:num**2 # both of the above functions would be called using 'square(n)'
+
+  # lambda functions are not typically used as shown above, where you assign the function to a variable. They can be used where a function is required, but won't need to be used anywhere else. For example
+
+  my_list = [1, 2, 3, 4]
+  square_list = list(map(lambda: num:num**2, my_list)) # returns a list of [1, 4, 9, 16].
+  ```
+  - Lambda functions should only be used when the logic is very simple and easy to understand. You'll typically use them in place of 'one-liner' functions that just have a return statement. The return keyword is not required in the lambda function as shown above.
+
+## Object Oriented Programming (OOP)
+- OOP places more of a focus on objects, rather than functions, which improves code organization and reusability. Objects are used to combine data and behavior and classes act as the blueprint for objects.
+- The `class` keyword is used to create classes in python and the standard naming convention for classes is `CamelCase`. A class is constructed as follows:
+  ```
+  class Sample():
+    def __init__(self, param1, param2): # this method acts as the class's constructor. The first parameter of all constructors must be 'self' because it ties the method to the class.
+      self.param1 = param1
+      self.param2 = param2
+    
+    def some_method(self):
+      print(self.param1) # prints the first parameter of the class. The self keyword is used to bind the method to the class.
+  
+  my_sample = Sample() # creates an instance of the sample class and stores it in my_sample.
+  my_sample.some_method() # calls the some_method function defined in the sample class.
+  ```
+- Dog class example:
+  ```
+  class Dog():
+    # Class Attributes (typically static values)
+    species = "Mammal" # similar to a static constant in Java.
+
+    def __init__(self, breed, name):
+      self.breed = breed # this tells python to define a 'breed' attribute for the class and assign the value of 'breed' to it when a dog object is constructed. Conventionally, the attribute and parameter will have the same name, but it is not a strict requirement.
+      self.name = name
+    
+    def bark(self, number):
+      print("WOOF! I am {}. The number is {}.".format(self.name, number)) # as with the constructor, the 'self' keyword is the first parameter and is used to tie the method to the class.
+  
+  test_dog = Dog(breed = "Lab", name = "Sammy") # you can also just list the parameters values without equating them to the parameter names.
+  test_dog.breed # returns 'Lab' because of how we defined the test_dog object.
+  test_dog.name # returns 'Sammy' because of how we defined the test_dog object.
+  test_dog.species # returns 'Mammal' because of how the attribute was defined in the class.
+  test_dog.bark(10) # prints 'WOOF! I am Sammy. The number is 10.' because of how the method was defined in the class.
+  type(test_dog) # returns __main__.dog
+  ```
+  - The `self.` in `self.name` of the `bark()` method is required so that python knows you're referring to the `name` attribute of the `dog` class.
+  - The `number` parameter in the `bark` method did not need to be prefaced with `self.` because it is not a class attribute. This allows the method parameter to be independent of the class attribute, which will typically not change after the object is constructed.
+- Circle class example:
+  ```
+  class Circle():
+    # Class Attributes
+    pi = 3.141592654
+
+    def __init__(self, radius = 1):
+      self.radius = radius # as with other methods, you can use default parameters in the constructor
+      self.area = Circle.pi * self.radius ** 2
+
+    def circumference(self):
+      return 2 * Circle.pi # self.radius 
+  
+  my_circle = Circle()
+  my_circle.radius # returns 1 because that is the default parameter defined in the class.
+  my_other_circle = Circle(5)
+  my_other_circle.radius # returns 5 because that is the value passed to the constructor.
+  my_circle.circumference # returns 6.28.
+  ```
+  - The `self.` prefix is required when referring to any class attribute. However, for static class attributes such as pi, you can also use the name of the class (i.e. `Circle.pi`)
+  - The class attributes don't need to have a one-to-one relationship with the constructor arguments. You can have more attributes than arguments, such as with `self.area`.
+
+## Inheritance and Polymorphism
+- Inheritance in python, as in other programming languages, occurs when one class inherits methods and properties from another class. For example:
+  ```
+  class Animal():
+    def __init__(self):
+      print('Creating Animal...')
+    
+    def who_am_i(self):
+      print('I am an Animal')
+
+    def speak(self):
+      print('Animal Speaks')
+  
+  class Dog(Animal):
+    def __init__(self):
+      Animal.__init__(self) # prints 'Creating Animal...'
+      print("I am a Dog!")
+  
+  my_dog = Dog() # prints 'Creating Animal...' and 'I am a Dog!'.
+  my_dog.who_am_i() # inherits method from Animal class and prints 'I am an Animal'.
+  my_dog.speak() # inherits method from Animal class and prints 'Animal Speaks'.
+  ```
+  - A class extends another class by placing the parent class in the parentheses next to the subclass name. In the example above, `Animal` was placed inside the parentheses next to `Dog`, so `Dog` extends `Animal`.
+- When creating a subclass, you can override methods in the parent class as follows:
+  ```
+  class Animal():
+    def __init__(self):
+      print('Creating Animal...')
+    
+    def who_am_i(self):
+      print('I am an Animal')
+
+    def speak(self):
+      print('Animal Speaks')
+  
+  class Dog(Animal):
+    def __init__(self):
+      Animal.__init__(self) # prints 'Creating Animal...'
+      print("I am a Dog!")
+    
+    def who_am_i(self):
+      print("I am a good boy")
+  
+  my_dog = Dog()
+  my_dog.who_am_i() # prints 'I am a good boy'.
+  my_dog.speak() # still prints 'Animal Speaks' because the method has not been overridden in the subclass.
+  ```
+- Polymorphism in python, as in other programming languages, occurs when one class is used to create multiple subclasses. For example:
+  ```
+  class Animal():
+    def __init__(self):
+      print('Creating Animal...')
+    
+    def who_am_i(self):
+      print('I am an Animal')
+
+    def speak(self):
+      print('Animal Speaks')
+  
+  class Dog(Animal):
+    def who_am_i(self):
+      print("I am a Dog")
+
+  class Cat(Animal):
+    def who_am_i(self):
+      print("I am a Cat")
+  
+  my_dog = Dog() # inherits constructor from Animal class.
+  my_dog.who_am_i() # prints 'I am a Dog'.
+  my_cat = Cat() # inherits constructor from Animal class.
+  my_cat.who_am_i() # prints 'I am a Cat'.
+
+  for pet in [my_dog, my_cat]:
+    print(pet.who_am_i()) # prints 'I am a Dog' and 'I am a cat'.
+  ```
+  - Even though the `who_am_i()` method shares names across the different subclasses, it has different behavior based on which class the method is called on. This is what polymorphism is.
+
+## Magic Methods
+- Magic methods, also referred to as Dunder methods, in python are methods, such as init, that get called in the background. Other magic methods include those such as `len()` and `str()`. These can be called on generic types, such as lists and strings, but not on classes that are created, unless those methods are explicitly defined within the class. For example:
+  ```
+  class Sample():
+    def __init__(self):
+      pass
+  
+  len(Sample()) # throws a type error because the Sample class has not defined a len() method.
+  print(Sample()) # prints the memory address of the Sample object.
+  str(Sample()) # simply encloses the memory address of the Sample object in quotes.
+
+  class  Book():
+    def __init__(self, title, author, pages):
+      self.title = title
+      self.author = author
+      self.pages = pages
+
+    def __str__(self):
+      return "The author of {} is {}".format(self.title, self.author)
+    
+    def __len__(self):
+      return self.pages
+    
+    def __del__(self):
+      print("The Book is gone.")
+  
+  book_1 = Book("The Python Book", "Roger Wheelhouse", 100)
+  book_string = str(book_1) # returns 'The author of The Python Book is Roger Wheelhouse' and assigns the value to book_string.
+  print(book_1) # prints 'The author of The Python Book is Roger Wheelhouse'.
+  len(book_1) # returns 100 because of the way the method was implemented in the Book class.
+  del book_1 # removes book_1 from memory and prints 'The Book is gone.'
+  ```
+  - Note that, similar to the `__init__()` method, other magic methods such as `str()` have the same notation when being defined within a class. As with any other method, `self` is required to tie that implementation of the method to the class.
+  - The `print()` method simply prints whatever gets returned by `str()` to the console, which is why we are able to print the same thing without defining `print()` in the `Book` class.
+  - `del` is another magic method which removes a variable from memory. It will typically be called as: `del book_1` in the case of the `book_1` variable.
+
+## Errors and Exceptions
+- Similar to try-catch-finally in Java, python uses try-except-finally to handle errors that may occur during the execution of a program. For example:
+  ```
+  try:
+    result = 10 + '10' # results in a TypeError because the number will not be coerced into a string in python.
+  except:
+    print("You added incorrectly") # prints 'You added incorrectly' because an error was thrown during the execution of the code in the try block.
+  ```
+- Instead of generically catching all errors, you can catch specific errors as follows:
+  ```
+  try:
+    result = 10 + '10'
+  except TypeError:
+    print("You added incorrectly") # prints 'You added incorrectly' because a TypeError was encountered during the execution of the code in the try block.
+  except:
+    print("The addition was performed incorrectly") # will not print because the TypeError was caught first.
+  else:
+    print("Nice job adding") # will not print because the try block was not executed successfully.
+  finally:
+    print("This code will always run") # prints 'This code will always run' because the finally block executes regardless of whether an error is encountered in the try block.
+  ```
+  - The `else` block only executes when the try block executes successfully.
+  - The `finally` block always executes. If an error is encountered, the `except` block for that error will be executed in addition to the `finally` block.
+  - In typical data engineering code, you won't catch specific errors and will just use a generic except block to handle errors. You also typically won't use an `else` block and will use the `finally` block instead.
