@@ -3,12 +3,13 @@
 ## Data Types
 - Integer (int) - Represents whole numbers.
 - Floating Point (float) - Represents decimal numbers.
-- String (str) - Represents an ordered sequence of characters.
+- String (str) - Represents an ordered, **immutable** sequence of characters.
 - List (list) - Represents an ordered sequence of **mutable** primitives or objects, enclosed in square brackets. Ex: [2, 3.4, "5"]
 - Dictionary (dict) - Represents an unordered sequence of key-value pairs, enclosed in curly braces. Ex: {"Key": "value", "Name": "John", "Age": 45}
 - Tuple (tup) - Represents an ordered sequence of **immutable** objects, enclosed in parentheses. Once a tuple is created, it cannot be modified. Ex: (23, 45, "Hello", 100.0)
 - Boolean (bool) - Represents a true or false value.
   - The `==` operator is used to determine equality of two objects and returns a boolean.
+  - When converting an `int` to a `bool`, python uses the concept of truthiness. This means 0 will be converted to `False` and any other non-zero integer will be converted to `True`.
 - The `type()` function can be used to determine the type of a primitive or object.
 
 ### Numbers
@@ -26,6 +27,11 @@
 - Python variables are **case sensitive** and cannot contain spaces or special characters other than underscore.
 - Python naming convention is to separate words in variables using underscores, instead of camel-case (i.e. `first_name` instead of `firstName`).
 - The `print()` function can be used to print the value of a variable to the console.
+- Mutable variables can be updated and assigned a value at the same time by combining arithmetic operators with assignment operators as follows: `+= | -= | *= | /= | //= | %= | **= |`. For example:
+  ```
+  x = 2
+  x += 5 # x now equals 7. Equivalent to using 'x = x + 5'.
+  ```
 
 ## Lists
 - A python list is a mutable collection of objects separated by commas and enclosed in square brackets. For example: `list = [1, 2, 3, 4, 5]`.
@@ -78,13 +84,23 @@
 ## Dictionaries
 - A python dictionary is an unordered collection of key-value pairs enclosed in curly braces. For example: `d =  {"key1":"value1", "key2":"value2"}`.
 - As with lists, you use square brackets to extract a specific value from a dictionary using the key. For example: `d['key1'] = 'value1'`. Similar to lists, dictionaries can also contain key-value pairs of any type. For example: If `d2 = {'k1':100, 'k2':'python', 'k3':[2, 3, 4]}`, then `d2['k3'][2] = 4`.
+- Keys must be unique and immutable (strings, numbers, or tuples). It's typical for keys to be strings.
+- The existence of a key can be checked using the `in` operator as follows:
+  ```
+  if "age" in student:
+      print("Age is available in the dictionary.")
+  ```
 - The `keys()` function of a dictionary will return a list of keys. For example: `d2.keys() = ['k1', 'k2', 'k3']`.
 - The `values()` function of a dictionary will return a list of values. For example: `d2.values() = [100, 'python', [2, 3, 4]]`.
 - The `items()` function of a dictionary will return a list of tuples, each of which represents a key-value pair. For example: `d2.items() = [('k1', 100), ('k2', 'python'), ('k3', [2, 3, 4])]`.
 - A new key-value pair can be assigned to a dictionary as follows: `d2['k4'] = 25`. Now, `d2 = {'k1':100, 'k2':'python', 'k3':[2, 3, 4], 'k4':25}`. This method can also be used to modify the value of an existing key. For example: `d2['k1'] = 101`. Now, `d2 = {'k1':101, 'k2':'python', 'k3':[2, 3, 4], 'k4':25}`.
+- The `get()` method accepts a key and a value to return if the key is not present in the map. For example: `d.get("key1", "Key is not present.")`.
+- The `update()` method updates the dictionary with new key-value pairs. It accepts one argument in the form of key-value pairs enclosed in `{}`.
+- The `pop()` method removes a specific key-value pair from the dictionary using the pair's key. For example: `d.pop("key1")`
 
 ## Tuples
 - A python tuple is an immutable sequence of objects enclosed in parentheses. For example: `t = ('a', 'b', 'c', 'a', 'a', 'd', 'b')`.
+- Tuples are more performant and use less memory than lists. They should be used in favor of lists unless mutability is required.
 - The `count()` function tells you how many times an object appears in a tuple. For example: `t.count('a') = 3`.
 - The `index()` function tells you the index of an element in a tuple. For example: `t.index('c') = 2`. For elements that appear multiple times, `index()` will return the index of the first occurrence. For example: `t.index('a') = 0`.
 - Elements within a tuple are retrieved the same way they are for a list. For example: `t[4] = 'a'`.
@@ -127,6 +143,55 @@
   not(2>3 or 4>5) # true
   ```
 
+## Bitwise Operators
+- Bitwise operators in python work at the binary level. They manipulate individual bits of numbers.
+- Bitwise operators include:
+  - Bitwise AND (`&`): Returns `1` if both bits are `1`, otherwise `0`. For example:
+    ```
+    12 ->   00001100
+    13 -> & 00001101
+            ________
+            00001100 = 12
+    ```
+  - Bitwise OR (`|`): Returns `1` if either bit is `1`, otherwise `0`. For example:
+    ```
+    12 ->   00001100
+    13 -> | 00001101
+            ________
+            00001101 = 13
+    ```
+  - Bitwise XOR (`^`): Returns `1` if the bits are different, otherwise `0`. For example:
+    ```
+    12 ->   00001100
+    13 -> ^ 00001101
+            ________
+            00000001 = 1
+    ```
+  - Bitwise NOT (`~`): Flips all of the bits, converting `1` to `0` and `0` to `1`. For example:
+    ```
+    12 -> ~ 00001100
+            ________
+            11110011 = -13
+    ```
+  - Bitwise LEFT SHIFT (`<<`): Shifts bits left by n positions (multiplies by 2^n). For example:
+    ```
+    10 -> ~ 1010 << 2
+            ____
+            101000 = 40
+    ```
+  - Bitwise RIGHT SHIFT (`>>`): Shifts bits right by n positions (divides by 2^n). For example:
+    ```
+    10 -> ~ 1010 >> 2
+            ____
+            10 = 2
+    ```
+  - We used four leading zeroes in the example above because we assumed a fixed bid-width of 8 bits. The number of leading zeroes in a binary number is the difference between this width and the position of the most significant bit, which is the first 1. Since the position of the most significant bit in `1100` and `1101` is 4, we used 4 leading zeroes.
+  - Representing Negative Numbers in Binary (4-bit example):
+    - Step 1: Convert number to binary: 6 becomes 0110
+    - Step 2: Flip all of the bits: 0110 becomes 1001
+    - Step 3: Add 1: 1001 + 1 = 1010
+    - This means the representation depends on the bit width. It's not an absolute answer like in base 10.
+
 ## Control Flow Statements
 - The three control flow statements in python are: `if`, `elif` and `else`. Control flow statements work as follows:
   ```
@@ -134,6 +199,8 @@
     Code to execute if boolean_expression_a returns True.
   elif boolean_expression_b:
     Code to execute if boolean_expression_a returns False and boolean_expression_b returns True.
+  elif boolean_expression_c:
+    Code to execute if boolean_expression_a and boolean_expression_b return False and boolean_expression_c returns True.
   else:
     Code to execute by default.
   ```
@@ -251,6 +318,8 @@
     print(item) # prints numbers 3 through 9.
   
   for item in range(0, 10, 2) # prints even numbers.
+
+  for item in range(10, 0, -1) # prints numbers 10 through 1 backwards. Negative number is required when start > stop.
 
   # range() can also be used to generate lists:
   lst = list(range(0, 10)) # creates a list of numbers 1 through 9.
@@ -475,6 +544,26 @@
 
   employee_of_month(work_hours) # returns ("Henry", 600).
   employee,hours = employee_of_month(work_hours) # assigns "Henry" to employee and 600 to hours.
+  ```
+- A function can return multiple values as a tuple. For example:
+  ```
+  def rectangle_properties(length, width):
+      area = length * width
+      perimeter = 2 * (length + width)
+      return area, perimeter  # Returning two values
+
+  # Storing multiple return values
+  area_result, perimeter_result = rectangle_properties(5, 3)
+  print(f"Area: {area_result}, Perimeter: {perimeter_result}")
+  ```
+- The `global` keyword can be used to refer to and modify global variables within a function. For example:
+  ```
+  # Global variable
+  count = 10
+
+  def update_count():
+      global count  # Declaring that we are using the global variable
+      count += 5  # Modifying the global variable
   ```
 
 ### Interactions Between Functions
