@@ -95,6 +95,7 @@
 - The `items()` function of a dictionary will return a list of tuples, each of which represents a key-value pair. For example: `d2.items() = [('k1', 100), ('k2', 'python'), ('k3', [2, 3, 4])]`.
 - A new key-value pair can be assigned to a dictionary as follows: `d2['k4'] = 25`. Now, `d2 = {'k1':100, 'k2':'python', 'k3':[2, 3, 4], 'k4':25}`. This method can also be used to modify the value of an existing key. For example: `d2['k1'] = 101`. Now, `d2 = {'k1':101, 'k2':'python', 'k3':[2, 3, 4], 'k4':25}`.
 - The `get()` method accepts a key and a value to return if the key is not present in the map. For example: `d.get("key1", "Key is not present.")`.
+- The `setdefault()` method accepts a key and a value and only sets the key's value if it does not exist.
 - The `update()` method updates the dictionary with new key-value pairs. It accepts one argument in the form of key-value pairs enclosed in `{}`.
 - The `pop()` method removes a specific key-value pair from the dictionary using the pair's key. For example: `d.pop("key1")`
 

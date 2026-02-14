@@ -63,6 +63,7 @@ text = "hello world"
 print(text.upper())   # Convert to uppercase
 print(text.lower())   # Convert to lowercase
 print(text.title())   # Capitalize each word (i.e. 'Hello World')
+print('Hello World'.swapcase()) # Reverses the case of each character (i.e hELLO wORLD)
 
 # Removing Extra Spaces:
 text = "  Python  "
@@ -155,6 +156,12 @@ print("Copied:", copied) # Prints Copied: [1, 2, 3, 4]
 single_element_tuple = ("hello",)  # Comma is required
 print(type(single_element_tuple))  # Prints ("hello",)
 
+# Printing Elements of a Tuple in Reverse Order:
+nums = (1, 2, 3, 4, 5)
+
+for i in range(len(nums) - 1, -1, -1):
+    print(nums[i])
+
 # Slicing and Indexing:
 numbers = (10, 20, 30, 40, 50) # Slicing and indexing work the same here as they do with lists
 print(numbers[1:4])   # Elements from index 1 to 3
@@ -188,6 +195,19 @@ print("Removed Value:", removed_value)
 print("Dictionary After Removal:", employee)
 
 print("Is 'bonus' in dictionary?", "bonus" in employee)
+
+# Dictionary Comprehension Example:
+my_dict = {"a": 1, "b": 2, "c": 3}
+reversed_dict = {value: key for key, value in my_dict.items()}
+print(reversed_dict)
+
+# Avoid Modifying a Dictionary Using copy():
+def combine_dicts(dict1, dict2):
+    merged = dict1.copy()
+    merged.update(dict2)
+    print("Merged Dictionary:", merged)
+
+combine_dicts({"a": 1, "b": 2}, {"c": 3, "d": 4})
 
 
 ### Modifying Global Variables Practice Problem:
@@ -279,3 +299,48 @@ bike = Bike("Harley Davidson")
 
 car.start_engine()
 bike.start_engine()
+
+
+### Using Infinity / Negative Infinity:
+dict = {'a': 10, 'b': 20, 'c': 30}
+highest_value = float('-inf')
+current_key = ''
+
+for key, value in dict.items():
+    if value > highest_value:
+        highest_value = value
+        current_key = key
+
+print(current_key)
+
+
+### Using sum() to Count Instead of For Loop:
+s = "HelloWorld"
+uppercase_count = sum(1 for char in s if char.isupper())
+lowercase_count = sum(1 for char in s if char.islower())
+print("Uppercase letters:", uppercase_count)
+print("Lowercase letters:", lowercase_count)
+
+
+### Counting Word Frequencies Practice Problem:
+sentence = "hello world hello"
+words = sentence.split()
+word_freq = {}
+for word in words:
+    word_freq[word] = word_freq.get(word, 0) + 1
+print(word_freq)
+
+# Alternative:
+def count_words(sentence):
+    frequencies = {}
+    words = sentence.split()
+    
+    for word in words:
+        if frequencies.get(word, 0) == 0:
+            frequencies[word] = 1
+        else:
+            frequencies[word] += 1
+    
+    print(frequencies)
+    
+count_words('hello world hello')
