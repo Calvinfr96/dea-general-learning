@@ -1,13 +1,26 @@
 {
   "cSpell.words": [
+    "aggfunc",
+    "applymap",
+    "bfill",
+    "colwidth",
+    "datatime",
     "dlro",
+    "dropna",
     "dtype",
+    "dtypes",
     "Dunder",
     "elif",
+    "ffill",
+    "fillna",
+    "groupby",
     "iloc",
     "Informatica",
     "inplace",
+    "isna",
+    "isnull",
     "nohty",
+    "notna",
     "numpy",
     "OLAP",
     "olle",
@@ -18,6 +31,8 @@
     "Robinhood",
     "setdefault",
     "Teradata",
+    "Timedelta",
+    "usecols",
     "varchar"
   ]
 }
