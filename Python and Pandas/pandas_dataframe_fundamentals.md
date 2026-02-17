@@ -2509,3 +2509,395 @@
   1 2025-02-15 14:45:00    14      45 2025-02-22 14:45:00
   2 2025-03-20 19:15:00    19      15 2025-03-27 19:15:00
   ```
+
+## Resampling and Frequency
+- Resampling is the process of changing the frequency of time-series data. It helps in aggregating data over a specified time period, such as daily, weekly, or monthly. It can be used to calculate statistics such as sum, mean, and count.
+  - Examples of resampling include converting hourly data to daily data or converting monthly data to quarterly data.
+  - Increasing the frequency (e.g. monthly to daily) is known as upsampling.
+  - Decreasing the frequency (e.g. daily to monthly) is known as downsampling.
+  - Resampling can be useful for tasks such as analyzing data at different granularity (e.g. daily, weekly, monthly), filling missing data points, and smoothing out fluctuations in data.
+- The `resample()` method in pandas is used for resampling data and has the following syntax:
+  ```
+  df.resample('<frequency>').<aggregation function>()
+  ```
+  - `'D'` = Daily
+  - `'W'` = Weekly
+  - `'M'` = Monthly
+  - `'Q'` = Quarterly
+  - `'Y'` = Yearly
+  - `'H'` = Hourly
+  - `'T'` = Minute
+  - `'S'` = Second
+- Resampling Example:
+  ```
+  import pandas as pd
+
+  # Step 1: Create a fixed sample DataFrame
+  data = {
+      'DateTime': pd.date_range(start='2025-01-01', periods=10, freq='D'),
+      'Sales': [100, 200, 150, 400, 300, 250, 500, 450, 600, 550]
+  }
+
+  df = pd.DataFrame(data)
+  df.set_index('DateTime', inplace=True)
+
+  print("Original DataFrame:")
+  print(df)
+
+  # Step 2: Resample Data (Sum of Sales per Week)
+  weekly_sales = df.resample('W').sum()
+
+  print("Weekly Sales (Sum):")
+  print(weekly_sales)
+
+  # Step 3: Resample Data (Average Sales per Month)
+  monthly_sales = df.resample('M').mean()
+
+  print("Monthly Sales (Mean):")
+  print(monthly_sales)
+  ```
+
+## Time-Based Indexing
+- Time-based indexing allows you to use a datetime column as an index in a data frame, allowing you to efficiently slice, filter, and resample the data based on time intervals. This can be very useful when working with time-series data for analysis, aggregation, and visualization.
+- Time-based indexing can be useful for:
+  - Efficiently querying and filtering data using date and time ranges.
+  - Performing time-based operations like resampling, shifting, and rolling.
+  - Analyzing trends over time.
+- To enable time-based indexing, you need to:
+  - Convert the date column in the data frame to `datetime` using `pd.to_datetime()` method.
+  - Set that column as the data frame index using the `set_index()` method.
+  ```
+  df['DateTime'] = pd.to_datetime(df['DateTime'])
+  df.set_index('DateTime', inplace=True)
+  ```
+- Time-Based Indexing Example:
+  ```
+  import pandas as pd
+
+  # Step 1: Create a fixed sample DataFrame
+  data = {
+      'DateTime': pd.date_range(start='2025-01-01', periods=10, freq='D'),
+      'City': ['New York', 'Chicago', 'Los Angeles', 'New York', 'Chicago',
+              'Los Angeles', 'New York', 'Chicago', 'Los Angeles', 'New York'],
+      'Sales': [1200, 800, 1500, 600, 750, 1700, 950, 1800, 500, 1300]
+  }
+
+  df = pd.DataFrame(data)
+
+  # Step 2: Convert 'DateTime' column to DateTime format
+  df['DateTime'] = pd.to_datetime(df['DateTime'])
+
+  # Step 3: Set 'DateTime' column as the index
+  df.set_index('DateTime', inplace=True)
+
+  print("Original DataFrame:")
+  print(df)
+
+  # Step 4: Filter data for a specific date range
+  filtered_df = df.loc['2025-01-03':'2025-01-07']
+  print("\nFiltered Data (Between 2025-01-03 and 2025-01-07):")
+  print(filtered_df)
+
+  # Step 5: Access data by year, month, and day
+  print("\nData for January 2025:")
+  print(df.loc['2025-01'])
+
+  # Step 6: Extract specific year and month using attributes
+  df['Year'] = df.index.year
+  df['Month'] = df.index.month
+
+  print("\nDataFrame after extracting Year and Month:")
+  print(df)
+  ```
+
+## Moving (Rolling) Averages
+- Moving (rolling) averages are used to "smooth out" short-term fluctuations in time-series data to identify long-term trends. This can be especially useful for financial data, sales forecasting, and stock price analysis.
+- A **moving** average is the average of a fixed number of previous data points in a time series. A moving average is calculated by taking the average of data points over a specific, fixed-size window. It helps reduce noise and show trends over time. There are two types of moving averages:
+  - Small Moving Average (SMA) is the average over a fixed window.
+  - Exponential Moving Average (EMA) is the same as an SMA, but gives more weight to recent data points.
+- The `rolling()` method is used to calculate moving averages. This syntax is as follows:
+  ```
+  df['rolling_average'] = df['column'].rolling(window=3).mean()
+  ```
+  - `rolling()` creates the fixed-size window over which the data will be aggregated.
+  - `window=3` specifies the width of the window (the number of periods).
+  - `mean()` specifies the type of aggregation being performed. In this case, average.
+- Moving Averages Example:
+  ```
+  import pandas as pd
+
+  # Step 1: Create sample data
+  data = {
+      'Date': pd.date_range(start='2025-01-01', periods=10, freq='D'),
+      'Sales': [200, 220, 210, 215, 250, 300, 280, 270, 260, 310]
+  }
+
+  df = pd.DataFrame(data)
+
+  # Step 2: Set 'Date' column as the index
+  df.set_index('Date', inplace=True)
+
+  # Step 3: Calculate rolling average with a window size of 3
+  df['Rolling_Avg'] = df['Sales'].rolling(window=3).mean()
+
+  print("DataFrame with Rolling Average:")
+  print(df)
+
+  # Output
+              Sales  Rolling_Avg
+  Date                          
+  2025-01-01    200          NaN
+  2025-01-02    220          NaN
+  2025-01-03    210        210.0
+  2025-01-04    215        215.0
+  2025-01-05    250        225.0
+  2025-01-06    300        255.0
+  2025-01-07    280        276.6
+  2025-01-08    270        283.3
+  2025-01-09    260        270.0
+  2025-01-10    310        280.0
+  ```
+  - The first two averages are `NaN` because there aren't two previous data points with which to create a window of three data points.
+  - The window size can affect how smooth the aggregated data is. Smaller windows are more responsive to changes and have more fluctuations. Larger windows lead to smoother trends but respond to changes more slowly.
+- Applying an Exponential Moving Average:
+  ```
+  # Calculate exponential moving average with span of 3
+  df['EMA'] = df['Sales'].ewm(span=3, adjust=False).mean()
+  print(df)
+
+  # Output
+              Sales  Rolling_Avg         EMA
+  Date                                      
+  2025-01-01    200          NaN  200.000000
+  2025-01-02    220          NaN  210.000000
+  2025-01-03    210   210.000000  210.000000
+  2025-01-04    215   215.000000  212.500000
+  2025-01-05    250   225.000000  231.250000
+  2025-01-06    300   255.000000  265.625000
+  2025-01-07    280   276.666667  272.812500
+  2025-01-08    270   283.333333  271.406250
+  2025-01-09    260   270.000000  265.703125
+  2025-01-10    310   280.000000  287.851562
+  ```
+  - EMA gives more weight to recent data points and reacts faster to recent changes than SMA.
+  - The `ewm()` method is used instead of the `rolling()` method.
+  - `span=3` is used to calculate the decay factor, which is used when calculating the average. It does not represent the size of the window.
+  - `adjust=False` tells pandas how to calculate the average.
+
+## Shifting and Lagging
+- Shifting is used to move data forward or backward in time. It's useful for comparing data over different periods, calculating percent change, and identifying trends.
+- Shifting moves data along the time index by a specified number of periods.
+- Lagging is a type of shifting where data is moved to a previous period.
+- Shifting and lagging are applied in pandas using the `shift()` method, which has the following syntax:
+  ```
+  df['shifted_column'] = df['column'].shift(periods=1)
+  ```
+  - `periods=1` specifies the number of periods to shift (positive for forward and negative for backwards).
+  - `fill_value` specifies the value to fill missing data after shifting (optional).
+- Shifting and Lagging Example:
+  ```
+  import pandas as pd
+
+  # Step 1: Create sample data
+  data = {
+      'Date': pd.date_range(start='2025-01-01', periods=10, freq='D'),
+      'Sales': [200, 220, 210, 215, 250, 300, 280, 270, 260, 310]
+  }
+
+  df = pd.DataFrame(data)
+  df.set_index('Date', inplace=True)
+
+  # Step 2: Shift sales data by 1 period (lagging)
+  df['Sales_Shifted_1'] = df['Sales'].shift(periods=1)
+
+  # Step 3: Shift sales data by -1 period (leading)
+  df['Sales_Leading_1'] = df['Sales'].shift(periods=-1)
+
+  print("DataFrame with Shifted and Leading Data:")
+  print(df)
+
+  # Output
+              Sales  Sales_Shifted_1  Sales_Leading_1
+  Date                                            
+  2025-01-01    200              NaN             220.0
+  2025-01-02    220            200.0             210.0
+  2025-01-03    210            220.0             215.0
+  2025-01-04    215            210.0             250.0
+  2025-01-05    250            215.0             300.0
+  2025-01-06    300            250.0             280.0
+  2025-01-07    280            300.0             270.0
+  2025-01-08    270            280.0             260.0
+  2025-01-09    260            270.0             310.0
+  2025-01-10    310            260.0               NaN
+  ```
+  - The first value in `Sales_Shifted_1` is `NaN` because there is no previous value to "shift forward".
+  - The last value in `Sales_Leading_1` is `NaN` because there is no proceeding value to "shift backwards".
+  - The optional `fill_value` parameter could be used to set a default value to use instead of `NaN`.
+- Filling Missing Values After Shifting
+  ```
+  df['Sales_Shifted_Fill'] = df['Sales'].shift(periods=1, fill_value=0)
+  print(df)
+
+  # Output
+              Sales  Sales_Shifted_Fill
+  Date                               
+  2025-01-01    200                   0
+  2025-01-02    220                 200
+  2025-01-03    210                 220
+  2025-01-04    215                 210
+  ```
+- Calculating Differences Using Shifting
+  ```
+  df['Sales_Diff'] = df['Sales'] - df['Sales'].shift(1)
+  print(df)
+
+  # Output
+              Sales  Sales_Diff
+  Date                         
+  2025-01-01    200         NaN
+  2025-01-02    220        20.0
+  2025-01-03    210       -10.0
+  2025-01-04    215         5.0
+  2025-01-05    250        35.0
+  ```
+- Calculating Percentage Change Using Shifting
+  ```
+  df['Sales_Percent_Change'] = df['Sales'].pct_change() * 100
+  print(df)
+
+  # Output
+              Sales  Sales_Percent_Change
+  Date                                  
+  2025-01-01    200                  NaN
+  2025-01-02    220                 10.0
+  2025-01-03    210                 -4.55
+  2025-01-04    215                  2.38
+  2025-01-05    250                 16.28
+  ```
+  - The `pct_change()` method uses a `shift` value of 1 in this case, since the first value is `NaN`.
+
+## Helpful Functions
+
+### Cut Function
+- The `cut()` method is used to segment and sort data values into "bins". This is useful for converting a continuously changing variable to one that changes over certain categories. For example, this method could convert ages into groups of age ranges. This is similar to partitioning in SQL.
+- Example Usage of Cut Method
+  ```
+  data = {
+    'Name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
+    'Age': [23, 35, 62, 45, 16]
+  }
+  df = pd.DataFrame(data)
+
+  # Divide ages equally according to the value of the bins parameter
+  df["Age_Group"] = pd.cut(df["Age"], bins = 4)
+
+  # Dividing ages according to custom set of intervals
+  bins = [0, 18, 35, 50, 100] # Divides into intervals of (0 - 18), (18 - 35), (35 - 50), and (50 - 100).
+  labels = ["Child", "Young Adult", "Middle Aged", "Senior] # Assigns labels to each interval created above.
+  df["Age_Group"] = pd.cut(df["Age"], bins = bins, labels = labels) # Instead of the values being those that are calculated by pandas, the labels are used as values.
+  ```
+
+### Explode Function
+- The `explode()` method is used to transform each element of a list-like (iterable) row to its own, individual row, while replicating index values.
+- Example Usage of Explode Method
+  ```
+  data = {
+    'article_id': [1, 2, 3],
+    'title': ['Article 1', 'Article 2', 'Article 3'],
+    'tags': [
+      ['python', 'data science', 'machine learning'],
+      ['python', 'programming'],
+      ['data science', 'statistics]
+    ]
+  }
+  df = pd.DataFrame(data)
+
+  df.explode("tags") # Separates each element in tags list of each row into its own row, while replicating index values. For example, the method would create two additional rows for the tags list in the first row, so that each tag has its own row.
+  ```
+  - If you don't want to replicate index values, you can pass the optional parameter `ignore_index=True`.
+
+### Shift Function
+- The `shift()` method is used to shift an index by a desired number of periods with an optional time frequency. When the frequency is not specified, the indexes are shifted without realigning the data.
+- Example Usage of Shift Method:
+  ```
+  data = {
+    'Sales': [1200, 2500, 4000, 5700, 8600],
+    'Region_Code': [13, 23, 18, 33, 48],
+    'Personnel': [12, 25, 37, 44, 63]
+  }
+  df = pd.DataFrame(data)
+
+  df.shift(periods = 3) # Shifts the data frame rows downward by 3 periods, filling in missing values with NaN.
+
+  df.shift(periods = 1, axis = 1) # Shifts the data frame columns to the right by 1, filling in missing values with NaN.
+
+  df.shift(periods = 3, fill_value = 0) # Shifts the data frame rows downward by 3 periods, filling in missing values with 0.
+
+  df[['Region_Code', 'Personnel']] = df[['Region_Code', 'Personnel']].shift(3) # Shifts the rows in the Region_Code and Personnel columns downward by 3 periods, filling in missing values with NaN.
+  ```
+  - To shift rows upward or columns to the left, you would use a negative number for the `periods` parameter.
+  - The `shift()` method does not mutate the existing data frame and instead returns a new data frame.
+
+### Apply Function
+- The `apply()` method is used to apply a specified function along an axis (row or column) of a data frame.
+- Example Usage of Apply Method:
+  ```
+  data = {
+    'first_name': ['Alice', 'Bob', 'Charlie', 'David', 'Mark', 'Irwin'],
+    'last_name': ['Smith', 'Jones', 'Brown', 'Millar', 'Picard', 'Kent'],
+    'score': [82, 91, 68, 75, 21, 32]
+  }
+  df = pd.DataFrame(data)
+
+  def get_results(score):
+    if score >= 35:
+      return "Pass"
+    else:
+      return "Fail"
+
+  df["result"] = df["score"].apply(get_results) # Applies the function to the score column, assigning the appropriate value, then storing the results in a new result column.
+
+  df["score_squared"] = df["score"].apply(lambda x: x ** 2) # Applies the function to the score column, assigning the appropriate value, then storing the results in a new score_squared column.
+
+  df["full_name"] = df.apply(lambda row: f"{row["first_name"]} {row["last_name"]}", axis = 1) # Applies the function to each row, assigning the appropriate value, then storing the results in a new full_name column.
+  ```
+
+### Melt Function
+- The `melt()` method is used to unpivot a data frame from wide (more columns) to long (less columns) format, optionally leaving identifiers set.
+- Example Usage of Melt Method:
+  ```
+  data = {
+    'student': ['Alice', 'Bob'],
+    'math': [90, 78],
+    'english': [85, 80],
+    'history': [88, 70]
+  }
+  df = pd.DataFrame(data) # Wide format (columns for each subject).
+
+  melted_df = pd.melt(
+    df,
+    id_vars = "Student", # Column which will remain the same in the new data frame.
+    value_vars = ["Math", "English", "History"], # Columns which will become rows in the new data frame.
+    var_name = "subject", # Name of the column header that will contain the older columns in the new data frame.
+    value_name = "score" # Name of column header that will contain the values of the old columns in the new data frame.
+  ) # Results in new data frame with student, subject, score columns in the long format.
+  ```
+
+### Pivot Function
+- The `pivot()` method is used to return a data frame that is reshaped according to given index / column values.
+- Example Usage of Pivot Method:
+```
+data = {
+  'month': ['Jan', 'Jan', 'Feb', 'Feb', 'Mar', 'Mar'],
+  'product': ['Apple', 'Oranges', 'Apple', 'Oranges', 'Apple', 'Oranges',],
+  'sales': [250, 200, 300, 220, 280, 210]
+}
+df = pd.DataFrame(data)
+
+pivot_df = pd.pivot(
+  df,
+  index = "month", # The rows of the new data frame.
+  columns = "product", # The columns of the new data frame (unique values in the column).
+  values = "sales" # The values that will fill the elements of the new data frame.
+) # Apples and Oranges become column headers and Jan, Feb, and Mar become index (row) labels.
+```

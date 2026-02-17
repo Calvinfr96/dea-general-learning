@@ -19,6 +19,7 @@
     "inplace",
     "isna",
     "isnull",
+    "Millar",
     "nohty",
     "notna",
     "numpy",
@@ -32,6 +33,7 @@
     "setdefault",
     "Teradata",
     "Timedelta",
+    "unpivot",
     "usecols",
     "varchar"
   ]
