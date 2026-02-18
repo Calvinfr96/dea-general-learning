@@ -2326,7 +2326,7 @@
                 aggfunc='function')
   ```
   - `data` - The data frame to pivot.
-  - `values` - The column(s) to be aggregated. It tells the pivot table which column(s) contains the numerical figures to be aggregated. When o
+  - `values` - The column(s) to be aggregated. It tells the pivot table which column(s) contains the numerical figures to be aggregated. When omitted, all numerical columns are included by default.
   - `index` - The column(s) used to group the data. It groups the data by the unique values in these column(s). The unique values become rows in the resulting pivot table. When multiple columns are specified, the rows in the pivot table become hierarchical.
   - `columns` - The column(s) to pivot. The unique values become columns in the resulting pivot table. When multiple columns are specified, the columns in the pivot table become hierarchical.
   - `aggfunc` - The aggregate function to be applied.
