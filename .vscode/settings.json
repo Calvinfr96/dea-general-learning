@@ -1,5 +1,7 @@
 {
   "cSpell.words": [
+    "adset",
+    "adsets",
     "aggfunc",
     "applymap",
     "bfill",
@@ -11,6 +13,7 @@
     "dtypes",
     "Dunder",
     "elif",
+    "FAANG",
     "ffill",
     "fillna",
     "groupby",
