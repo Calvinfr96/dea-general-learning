@@ -195,7 +195,7 @@
 - Uses Cases:
   - Automate Extract, Transform, and Load (ETL) processes - Ensure that multiple, long-running ETL jobs run in order and complete successfully, without the need for manual orchestration.
   - Orchestrate Microservices - Combine multiple AWS Lambda functions into responsive, serverless applications and microservices.
-  - Orchestrate Large-Scale, Parallel Workloads - Iterate over and process large data sets such as security logs, transaction data, or image and video files.
+  - Orchestrate Large-Scale, Parallel Workloads - Iterate over and process large datasets such as security logs, transaction data, or image and video files.
   - Automate Security and IT Functions - Create automated workflows, including manual approval steps, for security incident response.
 - Step Function Example (Order State Machine):
   - The following step function will consist of various lambda functions which perform different tasks in the online ordering process. One lambda function calls a purchase handler, another lambda function calls a refund handler, and the other lambda function calls a result handler.
@@ -302,3 +302,82 @@
   - Used to monitor the performance of EC2 instances, RDS databases, and other resources, which can be used to trigger automatic scaling events.
 
 ## Athena
+- Athena is a serverless query service that analyzes data stored in Amazon S3 using standard SQL.The service operates on a pay-as-you-go model, where customers are only charged for the queries that they run.
+- Athena scales automatically and executes queries in parallel, giving fast results, even with large datasets and complex queries.
+- Key Features:
+  - Easy Implementation - Athena does not require installation and can be easily accessed from the AWS CLI or Management Console.
+  - Serverless - The end user does not need to worry about provisioning, scaling, or configuring infrastructure. Everything is handled by AWS.
+  - Pay As You Go - Users only pay for the compute resources required to execute their queries.
+  - Fast - Athena can execute complex queries quickly by breaking them down into simpler queries which are run in parallel, then combining the results to give the desired output.
+  - Secure - IAM policies and AWS identities give you control over the datasets being analyzed.
+- Use Cases:
+  - Ad Hoc and Exploratory Querying - Athena is well-suited for ad hoc and exploratory querying, where users need to quickly assess data without setting up or managing infrastructure.
+  - Log Analysis - Athena is commonly used for querying large amounts of log data stored in S3.
+  - Business Intelligence - Athena can be used to serve business intelligence applications by querying data stored in S3 and sending the results to analysis tools such as Tableau and Power BI.
+- Limitations:
+  - Optimization is limited to queries, not data already stored in S3.
+  - No available indexing options.
+  - Stored procedures, parametrized queries, and Presto federated connectors are not supported.
+  - Athena can time out when querying a table with 1000s of partitions.
+  - Statements such as `CREATE`, `TABLE LIKE`, `DESCRIBE INPUT`, `DESCRIBE OUTPUT`, `EXECUTE`, `USING`, `MERGE`, and `UPDATE` are not supported.
+
+## Dynamo DB
+- DynamoDB is a serverless, key-value and document database that offers seamless scalability and low-latency performance. Unlike traditional relational databases, DynamoDB doesn't require provisioning of hardware or managing of infrastructure. All of this is handled by AWS, making it ideal for applications that need to dynamically scale based on changing workloads.
+- DynamoDB allows users to create databases capable of storing and retrieving any amount of data and serving any amount of traffic. It automatically distributes data and traffic across servers to dynamically handle each request while maintaining high performance.
+- Key Features:
+  - Scalability - DynamoDB can handle millions of requests per second, making it suitable for applications with varying traffic loads.
+  - High Availability - DynamoDB is designed for high availability and data durability with built-in replication across multiple availability zones.
+  - Managed Service - AWS takes care of the operational overhead including hardware provisioning, patching, and backups, allowing users to focus on core application features.
+  - Flexible Data Model - DynamoDB supports key-value, as well as document data models, providing flexibility in how data is structured.
+  - Cost Savings - The serverless architecture, coupled with automatic scaling capabilities, allows users to optimize costs by only paying for resources they consume.
+  - Security - IAM integration enables fine-grained, secure access control to database resources, all the way down to the item and attribute level.
+- Use Cases:
+  - Serverless Applications - Provides a durable backend for storing data at any scale and has become the defacto database for powering both web and mobile backends, e-commerce, retail, education, and media industries.
+  - High-Volume, Special Events - Ideal for special events and seasonal events, such as national electoral campaigns, that are of relatively short duration and have variable workloads with the potential to consume large amounts of resources.
+  - Social Media Applications - Ideal for community-based applications, such as online gaming, photo sharing, and location-aware applications, which have unpredictable usage patterns and can go viral at any time.
+  - Real-Time Analytics - Ideal for ingesting streaming event data in real time for sentiment analysis, ad serving, and trend analysis. DynamoDB allows you to increase and decrease throughput capacity as needed, with no downtime.
+- Limitations:
+  - Expensive at Scale - DynamoDB can be more expensive than other database solutions, especially at high scales.
+  - NoSQL Database - Not a good choice for workloads that require a relational database structure.
+  - Complex Queries - Lack of query optimization can make it difficult to execute complex queries efficiently.
+
+## Tag-Based Resource Allocation
+- A tag is a key-value pair that holds metadata about a resource and can be used to delete resources associated with a project once it is completed and the resources are no longer needed.
+- AWS Resource Groups is used to manage tags and their associated resources.
+
+## Elastic Container Service (ECS)
+- ECS and Elastic Container Registry (ECR) are complementary AWS services. ECR is a private repository used to store and manage Docker container images, while ECS is the orchestration service that pulls those images in order to run, manage, and scale containers. ECR can be thought of as the storage warehouse for container images, while ECS can be thought of as the management system running them.
+- A microservice can be made up of one or more Docker images. An application can be made up of multiple microservices. When a microservice needs to be scaled in order to accommodate increased traffic to the applications, the number of images will increase accordingly.
+  - Docker images are used to construct docker containers and docker containers are used to construct microservices. Microservices are used to construct applications.
+- To run an application properly, the health of all of the microservices and associated containers must be monitored in parallel for any failures due to network or code issues. Unhealthy containers must be replaced with healthy containers. Containers must also be appropriately scheduled to accommodate an application's normal traffic patterns.
+- Kubernetes is an open-source software that helps with managing containers. ECS is a service that is similar to Kubernetes.
+- ECS Concepts:
+  - Hierarchy: Application --> Microservices --> Cluster(s) --> Task Definition(s) --> Task(s) --> Docker Container(s) --> Docker Image --> Docker File.
+    - ECR fetches docker images and uses them to build docker containers.
+    - Each cluster has docker containers associated with one particular microservice.
+    - A microservice can contain multiple tasks. Each different task is associated with its own task definition.
+  - Container Orchestration - ECS works by orchestrating a group of docker containers, meaning that it will schedule, manage, and scale containers based on traffic load.
+  - ECS Cluster - An ECS cluster is a grouping of microservices (task definitions). It acts as a logical separation of identical tasks that are executed using docker containers. The ECS cluster manages all of the docker containers that are running inside of it and provide the compute resources needed for the containers to run.
+  - ECS Launch Type:
+    - ECS launch types include Fargate, Elastic Cloud Compute (EC2), and on-premises virtual machine.
+    - Fargate and EC2 are the most commonly used launch types. Fargate is a serverless, pay-as-you-go compute engine that lets you focus on building applications without needing to worry about managing servers. EC2 allows you to choose the instance type, number of instances, and manage the capacity. An EC2 machine will run a number of docker containers depending on its compute capacity and the compute resources required by each container.
+    - Launching an EC2 instance requires building a launch template that will install everything needed to run the docker containers.
+    - When manually provisioning resources with EC2, instances can be over-provisioned (too many instances deployed for the number of containers running) or under-provisioned (too few instances deployed for the number of containers running). Fargate automatically deploys the ideal amount of resources needed to run your containers.
+  - Task Definition - A skeleton of the tasks performed in your microservices. A task definition is a grouping of tasks. A task can consist of one or more docker containers.
+  - Task Lifecycle - Triggered --> Provisioning --> Pending --> Activating --> Running --> Deactivating --> Stopping --> Deprovisioning --> Stopped.
+    - A task consists of a task role and task execution role. The task role contains the permissions needed to run the task while the task execution role contains the permissions needed to execute the code in the docker image.
+  - Scheduling -  Tasks are scheduled using AWS Event Bridge
+
+## Glue
+- Glue is a fully managed, serverless ETL service that enables easy data preparation, integration, and loading for analytics and machine learning. As part of AWS, it operates without infrastructure management, supporting over 100 data sources with Apache Spark (Python/Scala) or Python shell jobs.
+- Key features include a central Data Catalog, automated schema discovery via crawlers, and serverless scalability.
+- Data Catalog:
+  - A glue data catalog is an entity that stores metadata related to the data you are working with. This metadata can include properties such as the location of the data, the table schemas, data types, and references to the original data.
+  - **The actual data is not moved into the glue catalog, only the metadata associated with the data.**
+  - Connectors allow you to connect to the source data securely without manually storing the necessary credentials anywhere in plaintext.
+  - Crawlers can inspect data and create a table schema for you. This can save time associated with manually inspecting the data and creating the table schema, but the crawler is not always accurate. Crawlers are optimal for cases where you are working with multiple tables from different sources, but cannot directly inspect the data.
+  - Data quality runs can also be performed on the data entered into a glue catalog. These checks will alert you whenever a table violates one or more of the rules set in the quality check.
+- ETL Jobs:
+  - ETL jobs in glue can be created using an interactive script editor that supports Python Shell, Ray, and Spark.
+  - When creating a job, you must specify job details such as the IAM role, requested number of workers, and job bookmark (allows a job to only process data that it has not previously processed)
+  - After specifying job details, you can add "nodes" to the job that represent units of work in the ETL job, such as extracting data from the data source. The job script will be automatically updated based on the nodes added in the visual editor.
