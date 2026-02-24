@@ -1,12 +1,15 @@
 {
   "cSpell.words": [
+    "ACCOUNTADMIN",
     "adset",
     "adsets",
     "aggfunc",
     "applymap",
     "bfill",
     "colwidth",
+    "Connell",
     "datatime",
+    "Dkdh",
     "dlro",
     "dropna",
     "dtype",
@@ -16,13 +19,18 @@
     "FAANG",
     "ffill",
     "fillna",
+    "Fryg",
     "groupby",
     "iloc",
     "Informatica",
     "inplace",
     "isna",
     "isnull",
+    "Marvis",
     "Millar",
+    "Mqan",
+    "MYDB",
+    "MYSCHEMA",
     "nohty",
     "notna",
     "numpy",
@@ -34,10 +42,12 @@
     "RDBMS",
     "Robinhood",
     "setdefault",
+    "SNOWPIPE",
     "Teradata",
     "Timedelta",
     "unpivot",
     "usecols",
-    "varchar"
+    "varchar",
+    "Whalen"
   ]
 }
