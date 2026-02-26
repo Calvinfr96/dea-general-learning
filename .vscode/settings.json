@@ -16,6 +16,7 @@
     "dtypes",
     "Dunder",
     "elif",
+    "Elon",
     "FAANG",
     "ffill",
     "fillna",
@@ -26,12 +27,14 @@
     "inplace",
     "isna",
     "isnull",
+    "ISUPDATE",
     "Marvis",
     "Millar",
     "Mqan",
     "MYDB",
     "MYSCHEMA",
     "nohty",
+    "NONCRON",
     "notna",
     "numpy",
     "OLAP",
@@ -45,9 +48,11 @@
     "SNOWPIPE",
     "Teradata",
     "Timedelta",
+    "UNDROP",
     "unpivot",
     "usecols",
     "varchar",
-    "Whalen"
+    "Whalen",
+    "XSMALL"
   ]
 }
