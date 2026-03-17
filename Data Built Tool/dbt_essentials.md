@@ -25,6 +25,59 @@
   - Documentation - This is the automatically-generated data from DBT metadata. It provides valuable insights into the structure and logic of data pipelines.
   - Projects - DBT projects comprise all components of a DBT workflow. This includes models, tests, configuration data, and all the relevant information for a specific data transformation. They manage all of the data transformation workflows by creating a structured environment.
 
+## Analytics Development Lifecycle (ADLC)
+- The key difference between ETL and ELT is where the data transformation takes place. In ETL, data is transformed before being loaded into a data warehouse/lake. In ELT, data is transformed after being loaded into a data warehouse/lake.
+- In ETL workflows, most meaningful data transformation occurs outside this primary pipeline in a downstream business intelligence (BI) platform. Transformations can include renaming, casting, joining or enriching values within columns.
+- In ELT workflows, data is extracted and loaded into a data warehouse first, allowing the data to be transformed using the warehouse’s computing power. ELT has emerged as a paradigm for how to manage information flows in a modern data warehouse. This represents a fundamental shift from how data previously was handled when ETL was the data workflow most companies implemented.
+- Primary Benefits of ELT:
+  - ELT aligns with the scalability and flexibility of modern data stacks, enabling organizations to work with large datasets more efficiently.
+  - Leverages Cloud Infrastructure: ELT takes advantage of the massive processing power of cloud-native data warehouses like Snowflake, BigQuery, and Redshift. By loading raw data into the warehouse first, ELT enables these systems to handle transformations at scale, which is particularly valuable when working with large volumes of data.
+  - Faster Data Availability: With ELT, raw data is loaded into the warehouse immediately, making it accessible for analysis more quickly. This reduces the delay often seen in ETL processes, where data must be transformed before it’s available for querying​.
+  - Cost Savings: ELT reduces the need for expensive on-premises hardware or complex ETL tools. Instead, it capitalizes on the inherent processing capabilities of cloud data warehouses, optimizing both performance and cost. In modern data stacks, offloading transformation tasks to cloud services can lead to significant cost savings​.
+  - Flexible, Iterative Transformation: ELT allows for more flexible data transformations. Since the raw data is already in the warehouse, analysts and data engineers can transform data iteratively, applying changes and optimizations without having to reload or reprocess the entire dataset. This flexibility makes it easier to adapt to evolving business needs and ensures that teams can always work with the latest data​.
+  - Data Democratization: By loading raw data into the warehouse first, ELT supports a more self-service data model. Analysts and data teams can access and transform data as needed without being bottle-necked by upstream ETL processes. This democratization fosters greater agility and collaboration across teams​.
+- DBT plays a crucial role in the ELT process by serving as the transformation layer within the data warehouse. While ELT relies on loading raw data into the warehouse, DBT empowers teams to manage and automate their transformations, ensuring the data is clean and analytics-ready.
+- Data Team Roles:
+  - Data Engineer:
+    - Builds systems to collect and process data. Data engineers create the foundation for all data-related work by building reliable, scalable data pipelines.
+    - Design data infrastructure and architecture.
+    - Create and maintain data pipelines.
+    - Ensure data quality and availability.
+    - Connect different data sources seamlessly and automate data collection.
+  - Analytics Engineer:
+    - Explore data already ingested into data platforms in response to stakeholder questions and needs.
+    - Clean and prepare data for analytical use cases.
+    - Transform prepared datasets into objects that can serve organizational objectives, such as a super-table that can serve as a base for multiple applications.
+    - Document the objects they find and create in the data warehouse, ensuring other users can see, understand, and use them. Documentation also helps to optimize storage utilization by ensuring data doesn't sit idle in storage unused and/or misunderstood.
+    - Respond to stakeholder needs, ensuring data engineers have more time to focus on critical maintenance and infrastructure updates.
+  - Data Analyst:
+    - Evaluate transformed data and turn it into business insights.
+    - Answer questions and solve business problems using data analysis methods.
+    - Interpret data to find trends.
+    - Create reports and visualizations.
+    - Work closely with business stakeholders.
+    - Provide value through actionable insights, helping businesses make informed decisions and drive strategic business outcomes.
+    - Translate complex findings into clear recommendations.
+- How DBT fits into the data pipeline:
+  - Data Source --> Loader (FiveTran, Stytch, AirByte) --> Data Platform (Snowflake, BigQuery, DataBricks) --> **DBT** --> Downstream Operational and Analytics Tools.
+- ADLC:
+  - Plan: Teams determine the what needs to be done, clarify priorities, get shared expectations.
+  - Develop: Write code to transform data into something useful. In DBT, that typically means creating SQL models.
+  - Testing: Test data to ensure high data quality.
+  - Deploy: Push changes to a production environment. This typically means building automated pipelines that test and deploy code after its been reviewed.
+  - Operate: Running deployed code consistently in a data pipeline. In DBT, this typically means scheduling jobs, monitoring runtimes, and configuring alerts for when things go wrong.
+  - Observe: Observing data pipelines, looking to see if models were executed correctly and tests passed.
+  - Discover: Explore models, understand logic, and find answers.
+  - Analyze: Analyze data and make insights that can potentially lead to further planning, starting the cycle over again.
+- Data Control Plane Components:
+  - Like air traffic control, the control plane doesn't move data itself, it orchestrates. governs, and observes the data. This gives a data team insights into what's running, what's changed, and what's breaking.
+  - DBT Mesh (Design): Enables domain-level data ownership without compromising governance or creating silos.
+  - DBT Catalog (Discover): Navigate, understand, and improve DBT cloud projects.
+  - DBT Semantic Layer (Align): Deliver consistent metrics wherever downstream teams work.
+  - DBT Studio, DBT Canvas, and VS Code (Build): Get the flexibility to build where you want.
+  - Scheduler and CI (Deploy): Automate how and when jobs are run, whether they are run in a staging environment or production.
+  - Testing and Alerts (Observe): Proactively enforce data quality and resolve issues quickly.
+
 ## DBT Setup With Snowflake
 - DBT can easily be integrated with Snowflake using the Partner Connect feature under Admin.
 - Switch your account to Developer (Free) version to avoid having your account terminated after 14 days.
@@ -51,8 +104,83 @@
 ## Execution of First DBT Model
 - A model is like a blueprint of a table or view that represent entities in the database. Models should always be created in the 'models' folder of a project. When you write code to create models, DBT provides the option to run a model and build a model. Running a model will execute the code within the file. Building a model will execute the code in the model and run the test cases that were created for the model.
 - Tests are configured in the `schema.yml` file in the 'models' folder on a per-column basis. DBT provides several default cases in this file, such as unique value tests and null checks.
-- The `dbt run` command will execute all models in the 'models' folder sequentially. To run a specific model, you use the command `dbt run --select {model_name}`. Once the run is executed, debug logs are provided that can be helpful with troubleshooting failed runs or builds.
+- The `dbt run` command will execute all models in the 'models' folder sequentially. This materializes the model(s) into the data warehouse. To run a specific model, you use the command `dbt run --select {model_name}`. Once the run is executed, debug logs are provided that can be helpful with troubleshooting failed runs or builds.
 - The `dbt build` command will execute and test all models in the 'models' folder sequentially. To build a specific model, you use the command `dbt build --select {model_name}`.
+  - The command will first run tests on your sources.
+  - Next, if those tests pass, the command will start to run, then immediately test each of your staging models.
+  - As models are successfully ran and tested, the build command progressively moves in a logical order to the next layer of models.
+  - If any test fails during this process, it is immediately halted and the command fails. This ensures erroneous data never makes it to downstream models.
+  - Overall, the `build` command is four commands in one:
+    - `dbt run` - Transforms and builds models in your warehouse.
+    - `dbt test` - Validates data for quality issues.
+    - `dbt seed` - Loads CSV data into warehouse tables.
+    - `dbt snapshot` - Tracks slowly changing dimensions in your data.
+
+## Understanding DBT Sources
+- A source is simply raw data loaded into DBT from a database platform such as snowflake. Sources tell DBT the pre-existing data that needs to be queried from data platform. In DBT, a source needs to be referenced using the `database.schema.table` format. This can become cumbersome if data is moved to another database or schema.
+- In DBT, this is resolved by referencing the database, schema, and name of a table in a `.yml` file, then giving this reference an alias that can be used in models. This means the table details only need to be updated in the `.yml` file if the details change.
+- When the `.yml` file is properly configured, `database.schema.table` can be replaced with `{{ source('source_alias', 'table_name') }}`.
+- Sources and staging models should have a one-to-one relationship.
+
+### Source Freshness
+```
+sources:
+  - name: jaffle_shop
+    database: raw
+    schema: jaffle_shop
+    tables:
+      - name: customers -- Customer details don't change frequently and don't need a freshness check.
+      - name: orders -- Order details changes more frequently and will cause problems if data becomes stale.
+        config:
+          freshness:
+            warn_after: -- Warning is issued about data becoming stale.
+              count: 6
+              period: hour
+            error_after: -- Error is thrown that data is critically outdated.
+              count: 12
+              period: hour
+          loaded_at_field: _etl_loaded_at -- Column in table that DBT will use to check the last load time.
+```
+```
+sources:
+  - name: jaffle_shop
+    database: raw
+    schema: jaffle_shop
+    config: -- Config block moved to sources level to apply to all tables.
+      freshness:
+        warn_after:
+          count: 6
+          period: hour
+        error_after:
+          count: 12
+          period: hour
+      loaded_at_field: _etl_loaded_at
+    tables:
+      - name: customers
+        config:
+          freshness: null -- Customers table excluded from freshness checks
+      - name: orders
+```
+- Source freshness can be configured at the `source` level or the `table` level. When the freshness config is set at the source level, `freshness: null` can be used at the table level to eliminate freshness checks for that table.
+- The `period` for freshness can be `minute`, `hour`, or `day`.
+- The `dbt source freshness` command checks source freshness and will issue a warning or error based on the above config.
+
+### Using the CodeGen Package
+- Real-world projects contain 100's to 1000's of tables in your data warehouse that need to be configured in your `.yml` config file. Instead of manually creating this file, the CodeGen package can be used to automate this process.
+- Documentation: https://hub.getdbt.com/dbt-labs/codegen/latest/
+- Create a `packages.yml` file in your project (no particular folder) and place the following code in it:
+  ```
+  packages:
+    - package: dbt-labs/codegen
+      version: 0.14.0
+  ```
+- Next, run `dbt deps` to install the package.
+- Next, open an empty file and place the following code inside of it: `{{ codegen.generate_source(schema_name= 'jaffle_shop', database_name= 'raw') }}`. Then, compile the code to get the generated yml code.
+- Example of Using CLI: `dbt run-operation generate_source --args '{"schema_name": "PUBLIC", "database_name": "DBT_DB"}'`
+- Example of Using Compile: `{{ codegen.generate_source(schema_name= 'PUBLIC', database_name= 'DBT_DB') }}`. Pass this into an untitled document and press the `Compile` button.
+- Either of the above methods produces the code that can be copied and saved into a `.yml` config file.
+- Once the config file is created, the `Generate Model` button above the name of each table for each source can be used to create a staging model for that table.
+- Once the models are created, they can be styled using this [guide](https://docs.getdbt.com/best-practices/how-we-style/1-how-we-style-our-dbt-models?version=1.12).
 
 ## Create a DBT Model
 ```
@@ -134,11 +262,38 @@ sources:
       - name: EMPLOYEE_RAW
 ```
 - DBT **cannot** be used to import data from an external source. This means any data you want to base your models on needs to exist in your snowflake account before you can create the model that will be used to transform the data. That's why the snowflake code comes before the DBT code.
+- When working in a development environment, developers should always be building models on top of their own unique target schema (for demo purposes, we're using the `PUBLIC` schema of the snowflake DB).
 - When creating a `.yml` file for configuring a model, you can either create one file to configure all models in a folder or create separate files for each model within a folder. Either way, at least one file must exist in each folder.
 - By default, DBT will always create an SQL query as a view, not a table. To fix the issue, you specify configuration as shown above.
 - `from {{source('employee','EMPLOYEE_RAW')}}` explained:
   - The `source` must be defined in the `.yml` under `sources`, as shown above. This helps to specify where to retrieve the table from without having to write `from DBT_DB.PUBLIC.EMPLOY_RAW`, which can be cumbersome, especially when a table is used in multiple schemas.
   - If the table schema changes, it only needs to be updated in the `.yml` file, not everywhere the table is referenced in the DBT code.
+- `{{ config(materialized='view') }}` explained.
+  - Sets the materialization specifically for the model defined within the SQL file. This can also be set in the `.yml` configuration file for the project:
+    ```
+    models:
+      project_name:
+        folder_name:
+          +materialized: table
+    ```
+      - The config set at the SQL-file level will override the config set in the `.yml` file.
+      - The `+` before `materialized` indicates it's a property, not a subdirectory.
+
+### Model Naming Conventions
+- Source (`src`): Tables of raw data loaded into a data warehouse.
+- Staging (`stg`): Transforming data based on business needs, which can involve things like renaming and/or recasting columns.
+- Intermediate (`int`): Where joins and aggregations occur. These should not depend directly on sources and should depend on staging models instead.
+- Fact (`fct`): Data representing real-world processes that have occurred or are occurring. Typically an immutable event stream, such as sessions, transactions, or orders.
+- Dimension (`dim`): Data representing people, places, or things. Typically mutable, but slowly-changing (SCD) entities, such as customers, products, or employees.
+- Staging model: References upstream models using the `source` macro. Performs light transformations on raw data.
+- Marts model: References upstream models using the `ref` macro. Applies business logic for stakeholders.
+
+### Troubleshooting DBT Run
+- Sometimes, a DBT run will fail because a model and its dependencies were not built in the proper order, to resolve this, you can use the commands below:
+  - `dbt run --select +{model_name}` builds the model and any upstream dependencies.
+  `dbt run --select {model_name}+` builds the model and any downstream dependencies.
+  - `dbt run --select +{model_name}+` builds the model and any upstream and downstream dependencies.
+  - This nomenclature also works for the `dbt build` and `dbt test` commands.
 
 ## Create and Execute DBT Default Generic Tests
 ```
@@ -149,7 +304,7 @@ version: 2
 
 
 models:
-  - name: employee
+  - name: employee -- model name.
     description: "Employee DBT model"
     columns:
       - name: emp_id
@@ -196,6 +351,10 @@ sources:
                     field: id
     ```
 - The `dbt test` command will execute all tests in the 'models' folder sequentially. To build a specific model, you use the command `dbt test --select {model_name}`.
+- `unique` and `not_null` tests should be applied to all primary keys. This will help to prevent breaking joins and other complex queries downstream.
+- Testing Best Practices:
+  - Sources should be tested to assess the quality of your raw data. These tests should be simple quality checks that are covered by the 4 generic tests mentioned above.
+  - Models should be tested to validate the accuracy and validity of your transformations. These can range from the simple generic tests mentioned above to more complex custom-built tests that enforce specific business criteria.
 
 ## Create and Execute DBT Custom Generic Tests
 ```
@@ -247,6 +406,64 @@ sources:
 - When creating a test file, it's standard practice to prefix the filename with `test_`.
 - `{% test salary_check(model,column_name) %}` explained:
   - A test case is typically written to be used across multiple models and column names.
+- Custom generic tests are used to verify a model or column adheres to specific business rules and validating complex business logic.
+- The custom generic test fails if the specified query returns any rows.
+- Instead of using Jinja as shown above, you can put a regular `.sql` file in the `tests` directory and run them using `dbt test --select {test_name}`.
+  ```
+  -- assert_stg_stripe__payment_total_positive.sql
+
+  select
+      order_id,
+      sum(payment_amount)
+  from {{ ref('stg_stripe__payments') }}
+  group by order_id
+  having sum(payment_amount) < 0 -- The query should be written to return rows that violate the testing criteria.
+  ```
+- testing is configured the same way for both `models` and `sources` within the config file. To test specific sources, use the command `dbt test --select source:{source_name}`. The `dbt test --select source:*` will test all source data.
+
+### Using DBT Copilot to Generate Tests
+- First, ensure copilot is enabled in account settings.
+- The 'Generic tests' feature will create a custom, formatted YML file for the specific model that is open when you click the button. The AI will analyze the model and include generic tests it deems appropriate in the file. **Be sure to check its work before committing changes and pushing to a production environment**.
+
+## Documentation Basics
+- Documentation is configured in the same YML files as your sources, models, and tests. Documentation helps streamline the development workflow by making data easily understandable to anyone who needs to use it. DBT can also make automatically make a catalog out of your documentation using the YML file.
+- The `description` property can be used at the source, model, table, and column level to describe the significance of the entity within the context of the project and/or business.
+- Example YML:
+  ```
+  models:
+    - name: stg_jaffle_shop__customers
+      description: The grain of this table is one unique customer per row.
+      columns:
+        - name: customer_id
+          description: Primary key for the customers table.
+  ```
+- Doc blocks are used in place of the `description` property when the description of a source, model, or column is too complex to fit into one or two sentences. These doc blocks are created in markdown files. For example:
+  ```
+  {% docs order_status %}
+  One of the following values:
+
+  | status         | definition                                              |
+  |----------------|---------------------------------------------------------|
+  | placed         | Order placed, but not shipped yet.                      |
+  | shipped        | Order shipped, but not delivered.                       |
+  | completed      | Order received by customers.                            |
+  | return_pending | Customer indicated they would like to return this item. |
+  | returned       | Item returned.                                          |
+
+  {% enddocs %}
+  ```
+  - The doc block is then referenced in the YML file under the `order_status` column as follows: `description: {{ doc('order_status') }}`.
+- As with generating tests, DBT copilot can be used to automatically generate documentation for the specific model that is open by using the 'Documentation' feature. **Be sure to check its work before committing changes and pushing to a production environment**. You can also use the `dbt docs generate` command.
+
+## Deployment
+- A deployment in DBT involves running DBT commands (such as `dbt build`) on a schedule so that they are executed on a regular schedule without human intervention. Deployment also involves building all of the models into a production schema that is separate from your personal development schema.
+- This separation of schemas allows developers to work on features and bug fixes without interrupting production services used by analysts and business leaders.
+- When deploying, DBT uses the `main` branch to build models, which is why your code needs to be merged before being pushed to production. DBT defaults to the `main` branch unless you specify a custom branch in your deployment/production environment.
+- To schedule a deployment in DBT, you must first setup the deployment/production environment with the appropriate connection to the data warehouse. Next, you must create a deployment job within the deployment environment.
+- **Deployments should use a separate data warehouse account and schema than the one used for development purposes**.
+- Commands to run during the job can be added in Execution Settings and the schedule by which to run the job can be configured in Triggers. Jobs can be run based on a schedule or based on the completion of another job.
+- During each deployment, the DBT Catalog will be automatically updated. The catalog is a good place to debug and check performance as it offers features such as a unique DAG for each column of each table, performance stats, and the status of recent builds/runs.
+- The catalog also offers recommendations such as adding tests or documentation to a column. These recommendations are ranked from low to high based on severity.
 
 ## Materializations in DBT
 - Documentation: https://docs.getdbt.com/docs/build/materializations?version=1.12
@@ -278,7 +495,8 @@ sources:
     - Incremental models are best for event-style data.
     - Only use incremental models when `dbt run` becomes slow.
 - Ephemeral Materializations:
-  - This type of materialization isn't built directly into the database. Instead, DBT will interpolate the code from an ephemeral model into its depend models using a CTE. You can assign an alias to this CTE, but DBT will always prefix it with the identifier `__dbt__cte__`.
+  - This type of materialization isn't built directly into the database. Instead, DBT will interpolate the code from an ephemeral model into its dependent models using a CTE. You can assign an alias to this CTE, but DBT will always prefix it with the identifier `__dbt__cte__`.
+  - If a model's materialization is switched from a table or a view to ephemeral, that table or view won't automatically be dropped when the model is materialized as ephemeral.
   - Pros:
     - You can still write reuseable logic.
     - Ephemeral models help keep your data warehouse clean by reducing clutter.
@@ -986,6 +1204,7 @@ sources:
 ```
 - Documentation: https://docs.getdbt.com/docs/build/materializations?version=1.12
 - Ephemeral models are best used to perform data cleansing, where you want to transform the data, but you don't want to store the results of those transformations in a separate table. You only want the clean data.
+- Referencing models using the `ref` macro as shown above helps maintain modularity in your DBT project and allows your DAG to clearly show how your models relate to one another.
 
 ## Create DBT Snapshot
 ```
