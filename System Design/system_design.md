@@ -252,3 +252,100 @@
   - Oracle Autonomous Data Warehouse
   - Microsoft Azure Synapse SQL
   - Google Big Query
+
+## ETL & ELT Simplified
+- ETL (Extract, Transform, Load) is a data integration process that combines data from multiple data sources into a single, consistent data store that is loaded into a data warehouse or other target system. ELT is an alternative approach to data integration that also involves extracting, transforming, and loading data. However, in ELT, the data is first loaded into the target system and then transformed within the system itself. This approach takes advantage of the processing capabilities of modern data platforms to perform transformations more efficiently.
+  - Extract raw data from various sources, such as files, databases, websites, and applications, into a staging area. This ensures that, if any issues arise during the ETL/ELT process, data can be safely reverted to its original state.
+  - Transform raw data by cleaning and standardizing the data in a staging area. This cleaning and standardizing converts the data from its raw format into a single, unified format. This is essential in ensuring compatibility and consistency across different datasets.
+    - Cleaning means identifying inconsistencies, errors, and inaccuracies within the data. This typically involves data validation, filling null or missing values, standardizing different formats of specific data (such as dates/times), deduplication, and removing anomalies.
+    - Joining means linking data from multiple sources.
+    - Filtering means selecting only certain rows/columns.
+    - Aggregation means aggregating data elements from various sources and databases.
+    - Derivation means applying business rules to your data that derive newly calculated data from existing data.
+  - Load the transformed data into a data warehouse or data lake. There are three ways of loading data into a destination:
+    - Initial Load means filling all of the data warehouse tables.
+    - Full Refresh means cleaning the contents of one or more tables, then reloading the tables with fresh data.
+    - Incremental Load means implementing ongoing modifications to data within tables on a regular basis.
+- Key Differences:
+  - Transform and load location.
+  - ETL works better with structured data, while ELT can handle unstructured, semi-structured, and structured data.
+  - ELT is generally faster than ETL as it is able to leverage cloud computing power.
+  - Choosing between ELT and ETL depends on various factors such as the volume, variety, and velocity of your data sources, the purpose and scope of your data analysis and reporting needs, the capabilities of your data integration and transformation tools, and the skills and roles of your data team.
+- Benefits of ETL:
+  - Helps businesses build deep historical context with data.
+  - Provides a consolidated view of data, making analysis and reporting easier.
+  - Improves productivity with repeatable processes that don't require a lot of coding.
+  - Improves data accuracy and audit capabilities required for regulatory compliance.
+- ETL vs. ELT
+  - Flexibility: ETL requires more upfront planning to ensure all relevant data is properly integrated. ELT is flexible and allows for adding more extracted in the future.
+  - End Users: ETL is used by users reading reports and SQL coders. ELT is used by data scientists and advanced analysts.
+  - Skills: ETL requires additional training and skills to perform the extraction and transformation. ELT mostly relies on native DBMS functionality.
+  - Maturity: ETL is a mature practice with lots of skilled technicians, best practices, and available tools. ELT is relatively new, with less expertise and fewer best practices.
+  - Use Cases: ETL is best for small to medium amounts of relational and structured data. ELT is best for large amounts of unstructured and non-relational data.
+- ELT Best Practices:
+  - Identify data sources.
+  - Determine data destination.
+  - Specify the data being extracted.
+  - Plan your data validation process.
+  - Identify transformations.
+  - Determine the frequency of ELT runs. Identify if you'll need to perform full or incremental loading and whether you'll use batch or stream processing.
+  - Pick your ELT tool.
+  - Identify the business intelligence tools you'll need.
+  - Plan the maintenance process.
+
+### Data Pipeline Implementations
+- Snowflake ELT Implementation:
+  - Extract: Data is loaded into snowflake from various sources.
+  - Load: Data is stored in snowflake's raw layer. This is done using `COPY INTO` or Snowpipe.
+  - Transform: Within snowflake, data is cleaned, enriched, and prepared for analysis. This is done using SQL or snow spark (python).
+  - ELT is the preferred method of data transformation in snowflake because loading the data before transformation allows engineers to take advantage of snowflake's performance (parallel processing), scalability, and cost savings.
+- AWS Serverless ETL Pipeline:
+  - The pipeline automates the process of extracting raw data from an Amazon S3 bucket, transforming it with AWS Lambda, loading it into a MySQL database, and archiving the transformed data in Parquet format for efficient long-term storage.
+  - Key Components:
+    - Landing Data (S3 Data Source)
+    - Lambda Function for Data Preprocessing
+    - Processed Data (S3 Processed-CSV-Data)
+    - Lambda Function for Data Loading to MySQL (RDS) and S3 (Parquet)
+    - Archive Data in Parquet Format
+    - AWS RDS MySQL Database
+    - AWS Step Functions for Workflow Orchestration of the steps above.
+  - Benefits
+    - Scalability and Cost Efficiency using AWS serverless architecture.
+    - Automated Workflow
+    - High Performance Storage with Parquet
+    - Low Latency for Real-time Processing
+  - AWS Services Used:
+    - Amazon S3: Provides scalable object storage for raw and processed data.
+    - AWS Lambda: Executes the preprocessing and data-loading logic in a serverless manner.
+    - Amazon RDS MySQL: Offers a relational database for storing and querying processed data.
+    - AWS Step Functions: Orchestrates the flow of the entire pipeline, managing triggers, retries, and failures.
+    - Amazon S3 (for Parquet): Archives processed data in an efficient format for long-term storage.
+  - This serverless ETL pipeline demonstrates how to use AWS services like Lambda, S3, and RDS MySQL for scalable, automated data processing. Using step functions makes the workflow robust and reliable.
+  - From extracting raw data to transforming and loading it into a MySQL database, and finally archiving it in Parquet format, the pipeline is designed for efficient, automated handling of large datasets. This architecture can be easily adapted to a variety of use cases, from real-time data processing to batch ETL workflows.
+- Databricks Lakehouse Platform:
+  - Data Warehouse:
+    - Pros:
+      - Great for structured data.
+      - Highly performant
+      - Easy to keep data clean
+    - Cons:
+      - Very expensive
+      - Cannot support modern applications
+      - Not built for machine learning
+  - Data Lake:
+    - Pros:
+      - Supports all data workload use cases.
+      - Very flexible
+      - Cost effective
+    - Cons:
+      - Data can become messy.
+      - Requires constant tuning and optimization.
+      - Not very performant
+  - Databricks Lakehouse:
+    - Single platform for all data workloads.
+    - Maintains data governance associated with data warehouses.
+    - Built on open-source technology (Apache Spark).
+    - Supports popular programming languages such as Python, R, Scala, and SQL.
+    - Collaborative environment
+    - Simplified architecture:
+      - Source > Data Ingestion > Data Lake > Data Transformation/ETL > Data Warehouse
