@@ -1,0 +1,72 @@
+# Data Lake Fundamentals
+
+## Overview
+- A data lake is a storage repository that holds vast amounts of raw data in its native format. A data lake can store all types of unstructured, semi-structured, and structured data.
+- A data lake provides both storage, for raw data, and compute, for transforming and analyzing raw data.
+- There are six main guidelines that determine how data should be organized and managed in a data lake:
+    - Storage: Data should be stored in its raw, unprocessed form.
+    - Data Governance: The processes and policies that ensure the quality, availability, and security of data within the data lake. It involves defining data ownership, establishing data access controls, and implementing data privacy measures.
+    - Scalability: Storing large volumes of data in any form or type. Allows organizations to easily analyze data from various sources.
+    - Flexibility of Data Ingestion: Data lakes provide the ability to ingest data from various sources and in various formats. This allows organizations to easily integrate new data sources and quickly adapt to changing business requirements.
+    - Advanced Analytics: Data lakes enable organizations to apply advanced analytics techniques such as machine learning and artificial intelligence to gain valuable insights from data. This allows organizations to gain valuable insights, make data-driven decisions, and uncover hidden patterns and trends.
+    - Data Democratization: Data lakes make data accessible to a wide range of users within an organization, allowing different departments within the organization to easily collaborate with one another to analyze data and make data-driven decisions.
+- Benefits:
+    - Versatile data storage that doesn't require complex structuring.
+    - Highly scalable, especially when storing data in the cloud.
+    - Cost-effective data storage.
+- Challenges:
+    - Ensuring data quality and governance can be complex due to the lack of pre-defined schemas.
+    - The decentralized and flexible nature of data lake storage make robust access control and encryption difficult to implement.
+    - Improper data governance can cause data lakes to become fragmented, creating data "silos" that make analysis more difficult.
+    - Maintaining high query performance as data volume grows. Requires proper indexing and organization.
+- Best Practices:
+    - Clearly define objective and goals of the data lake initiative.
+    - Understand specific business use cases and analytics requirements.
+    - Involve key stakeholders (business users, data scientists, IT professionals, etc.) in the planning and implementation process.
+    - Establish robust data governance policies to maintain data quality, security, and compliance. Define data ownership, access controls, and metadata management practices. **Regularly audit and enforce data governance policies.**
+    - Embrace a "schema-on-read" approach to accommodate diverse data types and facilitate data exploration and adaptation with evolving data requirements.
+    - Enforce fine-grained access control policies to limit access to data based on a user's roles and responsibilities. Ensure sensitive data is managed using the principle of least privilege.
+    - Implement a metadata management system to effectively catalog and organize data. Maintaining detailed metadata streamlines data discovery.
+    - Optimize the architecture for scalability, performance, and cost effectiveness.
+    - Incorporate automated data quality checks to ensure consistent reliability. Also automate processing for data validation, cleansing, and enriching.
+    - Implement robust data lifecycle policies to effectively manage storage costs.
+    - Encourage thorough documentation and knowledge sharing.
+- Available Technologies:
+    - Hadoop Distributed File System (HDFS): Stores and manages large volumes of data across multiple nodes. Offers scalability, fault tolerance, and compatibility with Hadoop ecosystem tools.
+    - Apache Spark: Fast and general-purpose computing system that can quickly process large-scale data. Often used with data lakes for analytics and processing tasks. Offers in-memory processing, supports multiple programming languages, compatible with various data sources.
+    - AWS S3: Scalable object storage service. Offers scalability, durability, and integration with other AWS service.
+    - Azure Data Lake Storage: Scalable and secure data lake solution that supports analytical and operational workloads. Offers integration with other Azure services, hierarchical namespace, and fine-grained access control.
+    - Google Cloud Storage: Cloud-based object-storage service. Offers scalability, durability, and integration with other Google Cloud Platform (GCP) services.
+
+## Architecture and Use Cases
+- Data warehouses are usually optimized for querying structured data. Data lakes are optimized to store massive amounts of data in any form. Data lakes are best used for exploratory analytics, machine learning.
+- Real-World Data Lake Use Cases:
+    - Performing real-time analytics on streaming data to help resolve issues such as fraud detection and real-time, continuous optimization (like updating a user's recommendations on a video streaming platform).
+    - Social media analytics, brand management, customer engagement, etc.
+- Assessing and Validating Data Lake Architecture:
+    - Clearly define business objectives and use cases.
+    - Understand data-driven goals and requirements.
+    - Identify and analyze data sources and understand diversity of data formats.
+    - Evaluate data governance policies and compliance requirements.
+    - Assess how the data lake will fit into the overall data architecture to ensure a seamless flow of data.
+    - Assess whether cloud-based, on-premises, or hybrid deployment is best.
+    - Ensure data lake can handle varying loads of data and analytics effectively.
+- Data Management:
+    - Define an effective data ingestion process.
+    - Define an effective process for transforming and analyzing the data.
+    - Establish robust security protocols that protect data from external threats or unauthorized use.
+
+### Lambda Architecture
+- Features:
+    - Defines a set of patterns and guidelines for big data processing.
+    - Allows for storage of historical (batch) and real-time (streaming) data.
+    - Separates different concerns into their own distinct layers.
+    - Can be applied to various business domains.
+- Principles:
+    - Fault Tolerance: Architecture design must account for faults in hardware, software, and human behavior.
+    - Immutable Data: Data should be stored in its raw format. Raw data should be immutable in nature.
+    - Recomputation: Transformed or processed data should be accessible through recomputation of raw data. Raw data should be stored in a schema-less structure.
+- Components:
+    - Batch Layer: Raw data is stored in this layer. Views are built on top of raw data to improve query performance.
+    - Speed Layer: Real-time analysis is performed in this layer. Batch views are merged with real-time data.
+    - Serving Layer: Merges and queries data from the batch and speed layers.
